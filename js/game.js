@@ -1,0 +1,400 @@
+// 現在の表示状態
+const gameState = {
+  language: "ja",
+  screen: "title"
+};
+
+
+// 画面に表示する文字
+const SCREEN_TEXT = {
+  ja: {
+    title: "スートピア・カードバトル",
+    openMenu: "メニューへ",
+    menu: "メインメニュー",
+    start: "ゲームスタート",
+    rules: "ルール説明",
+    cards: "カード一覧",
+    backMenu: "メニューへ戻る",
+    backTitle: "タイトルへ戻る",
+    preparing: "ゲーム本編は準備中です。",
+    imageAlt: "スートピア・カードバトルのタイトルイラスト",
+
+    guide: [
+      {
+        title: "勝利条件",
+        body: "相手のライフを0にすると勝利です。お互いのライフは5から始まります。同時に0になった場合は引き分けです。"
+      },
+      {
+        title: "デッキと手札",
+        body: "デッキは15枚、最初の手札は3枚です。最初のターンはドローせず、2ターン目から毎ターン1枚引きます。"
+      },
+      {
+        title: "カードを選ぶ",
+        body: "お互いに手札から1枚選び、裏向きでセットします。両者が選んだら公開し、組み合わせで結果を判定します。使用したカードは捨て札になります。"
+      },
+      {
+        title: "攻撃・防御・フェイント",
+        body: "攻撃はフェイントに勝ち、防御は攻撃にカウンターし、フェイントは防御に勝ちます。勝った側が相手に1ダメージを与えます。"
+      },
+      {
+        title: "同じ種類を出した場合",
+        body: "攻撃同士は、お互いに1ダメージを受けます。防御同士、フェイント同士ではダメージは発生しません。ダメージは同時に処理します。"
+      },
+      {
+        title: "デッキがなくなった場合",
+        body: "カードを引くときにデッキが空なら、その時点でライフを比較します。ライフの多い側が勝利し、同じなら引き分けです。"
+      }
+    ]
+  },
+
+  en: {
+    title: "Suitopia: Card Battle",
+    openMenu: "Open Menu",
+    menu: "Main Menu",
+    start: "Game Start",
+    rules: "How to Play",
+    cards: "Card Gallery",
+    backMenu: "Back to Menu",
+    backTitle: "Back to Title",
+    preparing: "The game is coming soon.",
+    imageAlt: "Suitopia: Card Battle title illustration",
+
+    guide: [
+      {
+        title: "Winning",
+        body: "Reduce your opponent's life to 0 to win. Both players start with 5 life. If both reach 0 at the same time, the game is a draw."
+      },
+      {
+        title: "Deck and Hand",
+        body: "Each deck contains 15 cards. Start with 3 cards in hand. Skip the draw on the first turn, then draw 1 card each turn."
+      },
+      {
+        title: "Choosing a Card",
+        body: "Each player chooses 1 card from their hand and sets it face down. Reveal both cards after both players have chosen. Discard used cards."
+      },
+      {
+        title: "Attack, Defence and Feint",
+        body: "Attack beats Feint. Defence counters Attack. Feint beats Defence. The winner deals 1 damage to the opponent."
+      },
+      {
+        title: "Matching Types",
+        body: "If both players use Attack, both take 1 damage. Matching Defence or Feint cards cause no damage. All damage is resolved simultaneously."
+      },
+      {
+        title: "An Empty Deck",
+        body: "If a player must draw from an empty deck, immediately compare life totals. The player with more life wins. Equal life totals result in a draw."
+      }
+    ]
+  }
+};
+
+
+const app = document.getElementById("app");
+
+
+// メニューボタンを作る
+function createMenuButton(label, onClick, primary = false) {
+  const button = document.createElement("button");
+
+  button.type = "button";
+  button.className = primary
+    ? "menu-button menu-button-primary"
+    : "menu-button";
+
+  button.textContent = label;
+  button.addEventListener("click", onClick);
+
+  return button;
+}
+
+
+// 見出しを作る
+function createScreenHeading(label, hidden = false) {
+  const heading = document.createElement("h1");
+
+  heading.className = hidden
+    ? "screen-heading visually-hidden"
+    : "screen-heading";
+
+  heading.textContent = label;
+  heading.tabIndex = -1;
+
+  return heading;
+}
+
+
+// 画面を切り替える
+function changeScreen(screen) {
+  gameState.screen = screen;
+
+  renderScreen();
+  window.scrollTo(0, 0);
+
+  app.querySelector("h1")?.focus();
+}
+
+
+// 言語切り替えを作る
+function createLanguageControls() {
+  const controls = document.createElement("div");
+
+  controls.className = "language-controls";
+  controls.setAttribute("role", "group");
+  controls.setAttribute("aria-label", "表示言語 / Language");
+
+  [
+    { code: "ja", label: "日本語" },
+    { code: "en", label: "English" }
+  ].forEach(({ code, label }) => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "language-button";
+    button.textContent = label;
+    button.lang = code;
+
+    button.setAttribute(
+      "aria-pressed",
+      String(gameState.language === code)
+    );
+
+    button.addEventListener("click", () => {
+      if (gameState.language === code) {
+        return;
+      }
+
+      gameState.language = code;
+      renderScreen();
+
+      // 再描画後も選んだボタンにフォーカスを戻す
+      app.querySelector(
+        `.language-button[lang="${code}"]`
+      )?.focus();
+    });
+
+    controls.append(button);
+  });
+
+  return controls;
+}
+
+
+// タイトル画面
+function createTitleScreen(text) {
+  const screen = document.createElement("section");
+  screen.className = "title-screen";
+
+  const heading = createScreenHeading(text.title, true);
+
+  const stage = document.createElement("div");
+  stage.className = "title-stage";
+
+  const image = createCardImage(
+    "title-image",
+    "images/01_start.png",
+    text.imageAlt
+  );
+
+  const menu = document.createElement("div");
+  menu.className = "title-menu";
+
+  menu.append(
+    createMenuButton(
+      text.openMenu,
+      () => changeScreen("menu"),
+      true
+    ),
+    createLanguageControls()
+  );
+
+  stage.append(image, menu);
+  screen.append(heading, stage);
+
+  return screen;
+}
+
+
+// メインメニュー画面
+function createMainMenuScreen(text) {
+  const screen = document.createElement("section");
+  screen.className = "main-menu-screen";
+
+  const panel = document.createElement("div");
+  panel.className = "main-menu-panel";
+
+  const heading = createScreenHeading(text.menu);
+
+  const buttons = document.createElement("div");
+  buttons.className = "menu-stack";
+
+  buttons.append(
+    createMenuButton(
+      text.start,
+      () => changeScreen("preparing"),
+      true
+    ),
+    createMenuButton(
+      text.rules,
+      () => changeScreen("rules")
+    ),
+    createMenuButton(
+      text.cards,
+      () => changeScreen("gallery")
+    )
+  );
+
+  const backButton = createMenuButton(
+    text.backTitle,
+    () => changeScreen("title")
+  );
+  backButton.classList.add("text-button");
+
+  panel.append(
+    heading,
+    buttons,
+    createLanguageControls(),
+    backButton
+  );
+
+  screen.append(panel);
+
+  return screen;
+}
+
+
+// タイトル以外の共通画面を作る
+function createContentScreen(title) {
+  const screen = document.createElement("section");
+  screen.className = "content-screen";
+
+  screen.append(
+    createScreenHeading(title),
+    createLanguageControls()
+  );
+
+  return screen;
+}
+
+
+// カード一覧
+function createGalleryScreen(text) {
+  const screen = createContentScreen(text.cards);
+
+  const backButton = createMenuButton(
+    text.backMenu,
+    () => changeScreen("menu")
+  );
+
+  const list = document.createElement("div");
+  list.className = "card-list";
+
+  CARDS.forEach((cardData) => {
+    list.append(createCard(cardData, gameState.language));
+  });
+
+  const bottomBackButton = createMenuButton(
+    text.backMenu,
+    () => changeScreen("menu")
+  );
+
+  screen.append(backButton, list, bottomBackButton);
+
+  return screen;
+}
+
+
+// ルール説明
+function createRulesScreen(text) {
+  const screen = createContentScreen(text.rules);
+
+  const guide = document.createElement("div");
+  guide.className = "rules-panel";
+
+  text.guide.forEach((item) => {
+    const section = document.createElement("section");
+    section.className = "rule-section";
+
+    const heading = document.createElement("h2");
+    heading.textContent = item.title;
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = item.body;
+
+    section.append(heading, paragraph);
+    guide.append(section);
+  });
+
+  screen.append(
+    guide,
+    createMenuButton(
+      text.backMenu,
+      () => changeScreen("menu")
+    )
+  );
+
+  return screen;
+}
+
+
+// 本編の準備中画面
+function createPreparingScreen(text) {
+  const screen = createContentScreen(text.start);
+
+  const message = document.createElement("p");
+  message.className = "screen-message";
+  message.textContent = text.preparing;
+
+  screen.append(
+    message,
+    createMenuButton(
+      text.backMenu,
+      () => changeScreen("menu")
+    )
+  );
+
+  return screen;
+}
+
+
+// 現在の状態に合わせて表示する
+function renderScreen() {
+  const text = SCREEN_TEXT[gameState.language];
+
+  document.documentElement.lang = gameState.language;
+  document.title = text.title;
+
+  let screen;
+
+  switch (gameState.screen) {
+    case "menu":
+      app.className = "app-menu";
+      screen = createMainMenuScreen(text);
+      break;
+
+    case "gallery":
+      app.className = "app-content";
+      screen = createGalleryScreen(text);
+      break;
+
+    case "rules":
+      app.className = "app-content";
+      screen = createRulesScreen(text);
+      break;
+
+    case "preparing":
+      app.className = "app-content";
+      screen = createPreparingScreen(text);
+      break;
+
+    default:
+      app.className = "app-title";
+      screen = createTitleScreen(text);
+      break;
+  }
+
+  app.replaceChildren(screen);
+}
+
+
+// 初回表示
+renderScreen();
