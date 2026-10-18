@@ -1,7 +1,8 @@
 // 現在の表示状態
 const gameState = {
   language: "ja",
-  screen: "title"
+  screen: "title",
+  battle: null
 };
 
 
@@ -16,7 +17,6 @@ const SCREEN_TEXT = {
     cards: "カード一覧",
     backMenu: "メニューへ戻る",
     backTitle: "タイトルへ戻る",
-    preparing: "ゲーム本編は準備中です。",
     imageAlt: "スートピア・カードバトルのタイトルイラスト",
 
     guide: [
@@ -56,7 +56,6 @@ const SCREEN_TEXT = {
     cards: "Card Gallery",
     backMenu: "Back to Menu",
     backTitle: "Back to Title",
-    preparing: "The game is coming soon.",
     imageAlt: "Suitopia: Card Battle title illustration",
 
     guide: [
@@ -230,7 +229,7 @@ function createMainMenuScreen(text) {
   buttons.append(
     createMenuButton(
       text.start,
-      () => changeScreen("preparing"),
+      () => changeScreen("character-select"),
       true
     ),
     createMenuButton(
@@ -335,27 +334,6 @@ function createRulesScreen(text) {
   return screen;
 }
 
-
-// 本編の準備中画面
-function createPreparingScreen(text) {
-  const screen = createContentScreen(text.start);
-
-  const message = document.createElement("p");
-  message.className = "screen-message";
-  message.textContent = text.preparing;
-
-  screen.append(
-    message,
-    createMenuButton(
-      text.backMenu,
-      () => changeScreen("menu")
-    )
-  );
-
-  return screen;
-}
-
-
 // 現在の状態に合わせて表示する
 function renderScreen() {
   const text = SCREEN_TEXT[gameState.language];
@@ -381,9 +359,14 @@ function renderScreen() {
       screen = createRulesScreen(text);
       break;
 
-    case "preparing":
+    case "character-select":
       app.className = "app-content";
-      screen = createPreparingScreen(text);
+      screen = createCharacterSelectScreen();
+      break;
+    
+    case "battle":
+      app.className = "app-battle";
+      screen = createBattleScreen();
       break;
 
     default:
