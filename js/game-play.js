@@ -163,7 +163,8 @@ function createParticipant(character) {
     life: 5,
     deck: shuffleDeck(createDeck(character)),
     hand: [],
-    discard: []
+    discard: [],
+    field: null
   };
 
   // 最初の手札を3枚引く
@@ -188,6 +189,9 @@ function startBattle(characterId) {
 
   gameState.battle = {
     turn: 1,
+    phase: "choosing",
+    lastResult: null,
+    outcome: null,
     player: createParticipant(playerCharacter),
     cpu: createParticipant(cpuCharacter)
   };
@@ -251,403 +255,152 @@ function createCharacterSelectScreen() {
   return screen;
 }
 
-// 対戦画面用の表示文字
-const BATTLE_TEXT = {
-  ja: {
-    title: "カードバトル",
-    menu: "メニュー",
-    gameMenu: "ゲームメニュー",
-    resume: "ゲームへ戻る",
-    chooseAgain: "キャラクターを選び直す",
-    backMenu: "メインメニューへ戻る",
-    life: "ライフ",
-    deck: "山札",
-    discard: "捨て札",
-    cpuHand: "相手の手札",
-    playerHand: "あなたの手札",
-    cpuField: "相手の場",
-    playerField: "あなたの場",
-    turn: "ターン",
-    ready: "最初の手札を3枚配りました"
-  },
-
-  en: {
-    title: "Card Battle",
-    menu: "Menu",
-    gameMenu: "Game Menu",
-    resume: "Return to Game",
-    chooseAgain: "Choose Another Character",
-    backMenu: "Back to Main Menu",
-    life: "Life",
-    deck: "Deck",
-    discard: "Discard",
-    cpuHand: "Opponent's Hand",
-    playerHand: "Your Hand",
-    cpuField: "Opponent's Field",
-    playerField: "Your Field",
-    turn: "Turn",
-    ready: "Your 3 starting cards have been dealt"
-  }
-};
-
-
-// 対戦中のメニューの開閉状態
-const battleUI = {
-  menuOpen: false
-};
-
-
-// キャラクターの顔とライフ
-function createBattleProfile(participant, side) {
-  const language = gameState.language;
-  const text = BATTLE_TEXT[language];
-
-  const character = CHARACTERS.find(
-    (item) => item.id === participant.characterId
-  );
-
-  const name = getCharacterName(
-    participant.characterId,
-    language
-  );
-
-  const profile = document.createElement("section");
-  profile.className = `battle-profile battle-profile-${side}`;
-
-  const portrait = createCardImage(
-    "battle-portrait",
-    character.image
-  );
-
-  const details = document.createElement("div");
-  details.className = "battle-profile-details";
-
-  const heading = document.createElement("h2");
-  heading.className = "battle-character-name";
-  heading.textContent = name;
-
-  const life = document.createElement("p");
-  life.className = "battle-life";
-
-  const label = document.createElement("span");
-  label.textContent = text.life;
-
-  const value = document.createElement("strong");
-  value.textContent = participant.life;
-
-  life.append(label, value);
-  details.append(heading, life);
-  profile.append(portrait, details);
-
-  return profile;
-}
-
-
-// 山札・捨て札
-function createBattlePile(participant, kind) {
-  const language = gameState.language;
-  const text = BATTLE_TEXT[language];
-
-  const pile = document.createElement("div");
-  pile.className = `battle-pile battle-pile-${kind}`;
-
-  const cards = participant[kind];
-
-  const visual = document.createElement("div");
-  visual.className = "battle-pile-visual";
-  visual.setAttribute("aria-hidden", "true");
-
-  if (cards.length === 0) {
-    // 空の場合は置き場所だけを表示する
-    visual.classList.add("is-empty");
-  } else if (kind === "deck") {
-    visual.append(
-      createCardImage(
-        "battle-card-back",
-        "images/02_card_reverse.png"
-      )
-    );
-  } else {
-    // 捨て札がある場合は、一番上のカードを表示する
-    const topCard = cards[cards.length - 1];
-
-    visual.append(
-      createCard(topCard, language)
-    );
+// CPUの手札から、ランダムな位置を選ぶ
+function chooseCpuCardIndex(hand) {
+  if (hand.length === 0) {
+    return -1;
   }
 
-  const label = document.createElement("span");
-  label.className = "battle-pile-label";
-  label.textContent = text[kind];
-
-  const count = document.createElement("strong");
-  count.className = "battle-pile-count";
-  count.textContent = cards.length;
-
-  pile.append(visual, label, count);
-
-  return pile;
+  return Math.floor(Math.random() * hand.length);
 }
 
 
-// 山札と捨て札をまとめる
-function createBattlePiles(participant, side) {
-  const piles = document.createElement("div");
-  piles.className = `battle-piles battle-piles-${side}`;
-
-  // 上下で並びを反転する
-  if (side === "cpu") {
-    piles.append(
-      createBattlePile(participant, "deck"),
-      createBattlePile(participant, "discard")
-    );
-  } else {
-    piles.append(
-      createBattlePile(participant, "discard"),
-      createBattlePile(participant, "deck")
-    );
-  }
-
-  return piles;
-}
-
-
-// CPUの手札
-function createOpponentHand(participant) {
-  const text = BATTLE_TEXT[gameState.language];
-
-  const hand = document.createElement("section");
-  hand.className = "battle-opponent-hand";
-  hand.setAttribute(
-    "aria-label",
-    `${text.cpuHand}: ${participant.hand.length}`
-  );
-
-  participant.hand.forEach(() => {
-    hand.append(
-      createCardImage(
-        "battle-card-back",
-        "images/02_card_reverse.png"
-      )
-    );
-  });
-
-  return hand;
-}
-
-
-// 自分の手札
-function createPlayerHand(participant) {
-  const language = gameState.language;
-  const text = BATTLE_TEXT[language];
-
-  const hand = document.createElement("section");
-  hand.className = "battle-player-hand";
-  hand.setAttribute("aria-label", text.playerHand);
-
-  participant.hand.forEach((cardData) => {
-    hand.append(
-      createCard(cardData, language)
-    );
-  });
-
-  return hand;
-}
-
-
-// 中央のカードを出す場所
-function createBattleField(label, side) {
-  const field = document.createElement("section");
-  field.className = `battle-field battle-field-${side}`;
-
-  const heading = document.createElement("h2");
-  heading.className = "battle-field-label";
-  heading.textContent = label;
-
-  const slot = document.createElement("div");
-  slot.className = "battle-field-slot";
-  slot.setAttribute("aria-label", label);
-
-  field.append(heading, slot);
-
-  return field;
-}
-
-
-// メニューを閉じる
-function closeBattleMenu(dialog) {
-  battleUI.menuOpen = false;
-  dialog.close();
-
-  app.querySelector(".battle-menu-trigger")?.focus();
-}
-
-
-// 対戦中のメニュー
-function createBattleMenu() {
-  const language = gameState.language;
-  const text = BATTLE_TEXT[language];
-
-  const dialog = document.createElement("dialog");
-  dialog.className = "battle-menu-dialog";
-  dialog.setAttribute(
-    "aria-labelledby",
-    "battle-menu-heading"
-  );
-
-  const panel = document.createElement("div");
-  panel.className = "main-menu-panel";
-
-  const heading = document.createElement("h2");
-  heading.id = "battle-menu-heading";
-  heading.className = "screen-heading";
-  heading.textContent = text.gameMenu;
-
-  const buttons = document.createElement("div");
-  buttons.className = "menu-stack";
-
-  buttons.append(
-    createMenuButton(
-      text.resume,
-      () => closeBattleMenu(dialog),
-      true
-    ),
-
-    createMenuButton(
-      text.chooseAgain,
-      () => {
-        battleUI.menuOpen = false;
-        dialog.close();
-
-        gameState.battle = null;
-        changeScreen("character-select");
-      }
-    ),
-
-    createMenuButton(
-      text.backMenu,
-      () => {
-        battleUI.menuOpen = false;
-        dialog.close();
-
-        gameState.battle = null;
-        changeScreen("menu");
-      }
-    )
-  );
-
-  panel.append(
-    heading,
-    buttons,
-    createLanguageControls()
-  );
-
-  dialog.append(panel);
-
-  // Escキーでも閉じられる
-  dialog.addEventListener("cancel", (event) => {
-    event.preventDefault();
-    closeBattleMenu(dialog);
-  });
-
-  // 言語切り替えで再描画された場合も、
-  // メニューを開いた状態に戻す
-  queueMicrotask(() => {
-    if (dialog.isConnected && battleUI.menuOpen) {
-      dialog.showModal();
-    }
-  });
-
-  return dialog;
-}
-
-
-// 対戦画面
-function createBattleScreen() {
-  const language = gameState.language;
-  const text = BATTLE_TEXT[language];
+// プレイヤーとCPUのカードをセットする
+function setPlayerCard(handIndex) {
   const battle = gameState.battle;
 
-  const screen = document.createElement("section");
-  screen.className = "battle-screen";
+  if (
+    !battle ||
+    gameState.screen !== "battle" ||
+    battle.phase !== "choosing"
+  ) {
+    return false;
+  }
 
-  const heading = createScreenHeading(text.title, true);
+  const player = battle.player;
+  const cpu = battle.cpu;
 
-  const board = document.createElement("div");
-  board.className = "battle-board";
+  if (player.field || cpu.field) {
+    return false;
+  }
 
-  // 上側：CPU
-  const cpuHand = createOpponentHand(battle.cpu);
+  if (
+    !Number.isInteger(handIndex) ||
+    handIndex < 0 ||
+    handIndex >= player.hand.length
+  ) {
+    return false;
+  }
 
-  const cpuProfile = createBattleProfile(
-    battle.cpu,
-    "cpu"
+  // プレイヤーのカード内容を渡さずに選択する
+  const cpuIndex = chooseCpuCardIndex(cpu.hand);
+
+  if (cpuIndex === -1) {
+    return false;
+  }
+
+  const [playerCard] = player.hand.splice(handIndex, 1);
+  const [cpuCard] = cpu.hand.splice(cpuIndex, 1);
+
+  player.field = playerCard;
+  cpu.field = cpuCard;
+
+  battle.phase = "set";
+
+  return true;
+}
+
+// カードの組み合わせから、双方のダメージを求める
+function calculateDamage(playerType, cpuType) {
+  // 左の種類が、右の種類に勝つ
+  const winsAgainst = {
+    attack: "feint",
+    defence: "attack",
+    feint: "defence"
+  };
+
+  const types = Object.keys(winsAgainst);
+
+  if (
+    !types.includes(playerType) ||
+    !types.includes(cpuType)
+  ) {
+    throw new Error("Unknown card type");
+  }
+
+  // 同じ種類
+  if (playerType === cpuType) {
+    const damage = playerType === "attack" ? 1 : 0;
+
+    return {
+      playerDamage: damage,
+      cpuDamage: damage
+    };
+  }
+
+  // プレイヤー側の勝ち
+  if (winsAgainst[playerType] === cpuType) {
+    return {
+      playerDamage: 0,
+      cpuDamage: 1
+    };
+  }
+
+  // CPU側の勝ち
+  return {
+    playerDamage: 1,
+    cpuDamage: 0
+  };
+}
+
+
+// カードを公開し、ダメージと対戦終了を確定する
+function revealBattleCards() {
+  const battle = gameState.battle;
+
+  // セット済みの場合だけ処理する
+  // 公開後の再実行ではダメージを与えない
+  if (
+    !battle ||
+    gameState.screen !== "battle" ||
+    battle.phase !== "set" ||
+    !battle.player.field ||
+    !battle.cpu.field
+  ) {
+    return false;
+  }
+
+  const result = calculateDamage(
+    battle.player.field.type,
+    battle.cpu.field.type
   );
 
-  const cpuPiles = createBattlePiles(
-    battle.cpu,
-    "cpu"
+  battle.player.life = Math.max(
+    0,
+    battle.player.life - result.playerDamage
   );
 
-  // 中央：カードを出す場所
-  const fields = document.createElement("div");
-  fields.className = "battle-fields";
-
-  fields.append(
-    createBattleField(text.cpuField, "cpu"),
-    createBattleField(text.playerField, "player")
+  battle.cpu.life = Math.max(
+    0,
+    battle.cpu.life - result.cpuDamage
   );
 
-  // 下側：プレイヤー
-  const playerProfile = createBattleProfile(
-    battle.player,
-    "player"
-  );
+  battle.lastResult = result;
 
-  const playerPiles = createBattlePiles(
-    battle.player,
-    "player"
-  );
+  const playerLost = battle.player.life === 0;
+  const cpuLost = battle.cpu.life === 0;
 
-  const playerHand = createPlayerHand(battle.player);
+  if (playerLost || cpuLost) {
+    battle.phase = "finished";
 
-  // ターン表示
-  const turn = document.createElement("p");
-  turn.className = "battle-turn";
-  turn.textContent = `${text.turn} ${battle.turn}`;
+    battle.outcome = playerLost && cpuLost
+      ? "draw"
+      : playerLost
+        ? "cpu"
+        : "player";
+  } else {
+    battle.phase = "resolved";
+  }
 
-  // 状況表示
-  const message = document.createElement("p");
-  message.className = "battle-message";
-  message.textContent = text.ready;
-
-  // メニュー
-  const dialog = createBattleMenu();
-
-  const menuButton = createMenuButton(
-    text.menu,
-    () => {
-      battleUI.menuOpen = true;
-      dialog.showModal();
-    }
-  );
-
-  menuButton.classList.add("battle-menu-trigger");
-
-  board.append(
-    cpuHand,
-    cpuProfile,
-    cpuPiles,
-    fields,
-    playerProfile,
-    playerPiles,
-    playerHand,
-    turn,
-    message,
-    menuButton
-  );
-
-  screen.append(heading, board, dialog);
-
-  return screen;
+  return true;
 }
