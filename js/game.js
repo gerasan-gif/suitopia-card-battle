@@ -29,6 +29,10 @@ const SCREEN_TEXT = {
         body: "デッキは15枚、最初の手札は3枚です。最初のターンはドローせず、2ターン目から毎ターン1枚引きます。"
       },
       {
+        title: "キャラクターごとのデッキ構成",
+        body: "各デッキは15枚です。\n泉 風香：攻撃5枚・防御5枚・フェイント5枚。\nアンナ・マルコワ：攻撃4枚・防御7枚・フェイント4枚。\n島崎 雫：攻撃7枚・防御4枚・フェイント4枚。\n平原 千尋：攻撃4枚・防御4枚・フェイント7枚。\n相手の捨て札を確認すると、まだ使われていないカードの枚数を推測できます。"
+      },
+      {
         title: "カードを選ぶ",
         body: "お互いに手札から1枚選び、裏向きでセットします。両者が選んだら公開し、組み合わせで結果を判定します。使用したカードは捨て札になります。"
       },
@@ -67,6 +71,10 @@ const SCREEN_TEXT = {
         title: "Deck and Hand",
         body: "Each deck contains 15 cards. Start with 3 cards in hand. Skip the draw on the first turn, then draw 1 card each turn."
       },
+      {
+        title: "Character Decks",
+        body: "Each deck contains 15 cards.\nFuka Izumi: 5 Attack, 5 Defence, 5 Feint.\nAnna Markova: 4 Attack, 7 Defence, 4 Feint.\nShizuku Shimazaki: 7 Attack, 4 Defence, 4 Feint.\nChihiro Hirahara: 4 Attack, 4 Defence, 7 Feint.\nCheck your opponent's discard pile to work out how many cards of each type remain unplayed."
+      },      
       {
         title: "Choosing a Card",
         body: "Each player chooses 1 card from their hand and sets it face down. Reveal both cards after both players have chosen. Discard used cards."
@@ -124,6 +132,11 @@ function createScreenHeading(label, hidden = false) {
 
 // 画面を切り替える
 function changeScreen(screen) {
+  // 対戦画面を離れる場合はBGMを停止する
+  if (screen !== "battle") {
+    stopBattleBgm();
+  }
+
   gameState.screen = screen;
 
   renderScreen();

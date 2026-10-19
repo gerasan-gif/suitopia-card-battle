@@ -32,10 +32,13 @@ const BATTLE_TEXT = {
     noDamage: "同じ種類のため、ダメージなし",
     playerRoundWin: "あなたの勝ち！ 相手に1ダメージ",
     cpuRoundWin: "相手の勝ち！ あなたに1ダメージ",
+    nextTurn: "次のターンへ",
+    deckExhausted: "山札が0枚のため、ライフを比較します。",
     victory: "あなたの勝利です！",
     defeat: "あなたの敗北です",
     draw: "引き分けです",
-    playAgain: "もう一度対戦する"
+    playAgain: "もう一度対戦する",
+    selectCharacter: "キャラクター選択へ"
   },
 
   en: {
@@ -70,10 +73,13 @@ const BATTLE_TEXT = {
     noDamage: "Matching types. No damage",
     playerRoundWin: "You win this round! Opponent takes 1 damage",
     cpuRoundWin: "Opponent wins this round! You take 1 damage",
+    nextTurn: "Next Turn",
+    deckExhausted: "Deck empty. Comparing life totals.",
     victory: "You win the game!",
     defeat: "You lose the game",
     draw: "The game is a draw",
     playAgain: "Play Again",    
+    selectCharacter: "Choose Character"
   }
 };
 
@@ -175,6 +181,32 @@ function createBattlePile(participant, kind, side) {
 
   pile.append(visual, label, count);
 
+  // 捨て札だけ、クリック・タップで一覧を開く
+  if (kind === "discard") {
+    pile.classList.add("battle-discard-trigger");
+
+    pile.setAttribute("role", "button");
+    pile.setAttribute("tabindex", "0");
+    pile.setAttribute("aria-haspopup", "dialog");
+
+    pile.setAttribute(
+      "aria-label",
+      `${label.textContent}: ${cards.length}`
+    );
+
+    pile.addEventListener("click", () => {
+      openDiscardList(side, pile);
+    });
+
+    // キーボードでも操作できる
+    pile.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openDiscardList(side, pile);
+      }
+    });
+  }
+
   return pile;
 }
 
@@ -245,7 +277,10 @@ function createPlayerHand(participant) {
       createCard(cardData, language)
     );
 
-    if (participant.field) {
+    if (
+      participant.field ||
+      gameState.battle.phase !== "choosing"
+    ) {
       // セット後は、残りの手札を確認だけできる状態にする
       item.classList.add("is-locked");
     } else {
@@ -408,6 +443,7 @@ function createBattleMenu() {
   panel.append(
     heading,
     buttons,
+    createBgmToggleButton(),
     createLanguageControls()
   );
 
@@ -500,6 +536,15 @@ function createBattleScreen() {
   
   message.textContent = getBattleMessage();
 
+  // 状況説明と操作ボタンを縦にまとめる
+  const status = document.createElement("div");
+  status.className = "battle-status";
+
+  status.append(
+    message,
+    createBattleActions()
+  );
+
   // マウス操作時の拡大表示
   const hoverPreview = document.createElement("div");
   hoverPreview.className = "battle-hover-preview";
@@ -530,12 +575,10 @@ function createBattleScreen() {
     playerPiles,
     playerHand,
     turn,
-    message,
+    status,
     menuButton,
     hoverPreview
   );
-
-  board.append(createBattleActions());
 
   screen.append(
     heading,
@@ -584,12 +627,14 @@ function hideHoverPreview() {
 }
 
 
-// クリック・タップで確認画面を開く
+// カードを選択できる状態だけ、確認画面を開く
 function openCardPreview(handIndex) {
   const battle = gameState.battle;
 
   if (
     !battle ||
+    gameState.screen !== "battle" ||
+    battle.phase !== "choosing" ||
     battle.player.field ||
     !battle.player.hand[handIndex]
   ) {
@@ -708,6 +753,23 @@ function getBattleMessage() {
   const text = BATTLE_TEXT[gameState.language];
   const battle = gameState.battle;
 
+  const outcomeText = {
+    player: text.victory,
+    cpu: text.defeat,
+    draw: text.draw
+  };
+
+  // 山札から引けずに終了した場合
+  if (
+    battle.phase === "finished" &&
+    battle.endReason === "deck"
+  ) {
+    return (
+      `${text.deckExhausted}\n` +
+      outcomeText[battle.outcome]
+    );
+  }
+
   if (battle.phase === "choosing") {
     return text.chooseCard;
   }
@@ -724,7 +786,10 @@ function getBattleMessage() {
 
   let message;
 
-  if (result.playerDamage > 0 && result.cpuDamage > 0) {
+  if (
+    result.playerDamage > 0 &&
+    result.cpuDamage > 0
+  ) {
     message = text.bothAttack;
   } else if (
     result.playerDamage === 0 &&
@@ -737,13 +802,8 @@ function getBattleMessage() {
     message = text.cpuRoundWin;
   }
 
+  // ライフが0になって終了した場合
   if (battle.phase === "finished") {
-    const outcomeText = {
-      player: text.victory,
-      cpu: text.defeat,
-      draw: text.draw
-    };
-
     message += `\n${outcomeText[battle.outcome]}`;
   }
 
@@ -759,6 +819,7 @@ function createBattleActions() {
   const actions = document.createElement("div");
   actions.className = "battle-actions";
 
+  // 両者のセット後：公開する
   if (battle.phase === "set") {
     actions.append(
       createMenuButton(
@@ -779,6 +840,36 @@ function createBattleActions() {
     );
   }
 
+  // 判定後：次のターンへ進む
+  if (battle.phase === "resolved") {
+    actions.append(
+      createMenuButton(
+        text.nextTurn,
+        () => {
+          if (!nextBattleTurn()) {
+            return;
+          }
+
+          battleUI.previewIndex = null;
+
+          renderScreen();
+
+          if (gameState.battle.phase === "finished") {
+            app.querySelector(
+              ".battle-actions .menu-button"
+            )?.focus();
+          } else {
+            app.querySelector(
+              ".battle-hand-card[role='button']"
+            )?.focus();
+          }
+        },
+        true
+      )
+    );
+  }
+
+  // 対戦終了後
   if (battle.phase === "finished") {
     actions.append(
       createMenuButton(
@@ -793,9 +884,177 @@ function createBattleActions() {
           startBattle(characterId);
         },
         true
+      ),
+
+      createMenuButton(
+        text.selectCharacter,
+        () => {
+          battleUI.menuOpen = false;
+          battleUI.previewIndex = null;
+
+          gameState.battle = null;
+
+          changeScreen("character-select");
+        }
       )
     );
   }
 
   return actions;
+}
+
+// 捨て札一覧の表示文字
+const DISCARD_TEXT = {
+  ja: {
+    playerTitle: "自分の捨て札",
+    cpuTitle: "相手の捨て札",
+    empty: "捨て札はまだありません。",
+    order: "新しく捨てたカードから順に表示しています。",
+    total: "合計",
+    close: "閉じる"
+  },
+
+  en: {
+    playerTitle: "Your Discard Pile",
+    cpuTitle: "Opponent's Discard Pile",
+    empty: "There are no discarded cards yet.",
+    order: "Cards are shown from newest to oldest.",
+    total: "Total",
+    close: "Close"
+  }
+};
+
+
+// 捨て札一覧を開く
+function openDiscardList(side, trigger) {
+  const battle = gameState.battle;
+
+  if (
+    !battle ||
+    gameState.screen !== "battle" ||
+    !["player", "cpu"].includes(side)
+  ) {
+    return;
+  }
+
+  // 同じ一覧を二重に開かない
+  if (app.querySelector(".discard-dialog")) {
+    return;
+  }
+
+  const language = gameState.language;
+  const text = DISCARD_TEXT[language];
+  const participant = battle[side];
+
+  // コピーして逆順にする。元の捨て札の順番は変更しない
+  const cards = [...participant.discard].reverse();
+
+  const dialog = document.createElement("dialog");
+  dialog.className = "discard-dialog";
+  dialog.setAttribute(
+    "aria-labelledby",
+    "discard-dialog-heading"
+  );
+
+  const panel = document.createElement("div");
+  panel.className = "discard-panel";
+
+  const heading = document.createElement("h2");
+  heading.id = "discard-dialog-heading";
+  heading.className = "screen-heading";
+
+  heading.textContent = side === "player"
+    ? text.playerTitle
+    : text.cpuTitle;
+
+  // 種類別の枚数を数える
+  const counts = {
+    attack: 0,
+    defence: 0,
+    feint: 0
+  };
+
+  cards.forEach((card) => {
+    counts[card.type] += 1;
+  });
+
+  const summary = document.createElement("p");
+  summary.className = "discard-summary";
+
+  const typeCounts = Object.entries(counts).map(
+    ([type, count]) => {
+      const label = CARD_TYPES[type].lang[language].label;
+
+      return `${label}: ${count}`;
+    }
+  );
+
+  summary.textContent =
+    `${text.total}: ${cards.length} / ` +
+    typeCounts.join(" / ");
+
+  panel.append(heading, summary);
+
+  if (cards.length === 0) {
+    const message = document.createElement("p");
+    message.className = "screen-message";
+    message.textContent = text.empty;
+
+    panel.append(message);
+  } else {
+    const description = document.createElement("p");
+    description.className = "discard-description";
+    description.textContent = text.order;
+
+    // olを使い、読み上げでも順番がわかるようにする
+    const list = document.createElement("ol");
+    list.className = "discard-card-grid";
+
+    cards.forEach((cardData) => {
+      const item = document.createElement("li");
+      item.className = "discard-card-item";
+
+      item.append(
+        createCard(cardData, language)
+      );
+
+      list.append(item);
+    });
+
+    panel.append(description, list);
+  }
+
+  const closeButton = createMenuButton(
+    text.close,
+    () => dialog.close()
+  );
+
+  closeButton.autofocus = true;
+  panel.append(closeButton);
+
+  dialog.append(panel);
+
+  // 閉じたら一覧を取り除き、元の捨て札へフォーカスを戻す
+  dialog.addEventListener("close", () => {
+    dialog.remove();
+
+    if (trigger.isConnected) {
+      trigger.focus();
+    }
+  });
+
+  // Escキーでも閉じられる
+  dialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    dialog.close();
+  });
+
+  const screen = app.querySelector(".battle-screen");
+
+  if (!screen) {
+    return;
+  }
+
+  screen.append(dialog);
+  dialog.showModal();
 }

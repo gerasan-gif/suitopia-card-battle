@@ -192,10 +192,13 @@ function startBattle(characterId) {
     phase: "choosing",
     lastResult: null,
     outcome: null,
+    endReason: null,
     player: createParticipant(playerCharacter),
     cpu: createParticipant(cpuCharacter)
   };
 
+  // 対戦データ作成後、BGMを再生して画面を切り替える
+  playBattleBgm();
   changeScreen("battle");
 }
 
@@ -401,6 +404,60 @@ function revealBattleCards() {
   } else {
     battle.phase = "resolved";
   }
+
+  return true;
+}
+
+// 使用カードを捨て札に移し、次のターンを始める
+function nextBattleTurn() {
+  const battle = gameState.battle;
+
+  // 公開・判定が完了した場合だけ進める
+  if (
+    !battle ||
+    gameState.screen !== "battle" ||
+    battle.phase !== "resolved" ||
+    !battle.player.field ||
+    !battle.cpu.field
+  ) {
+    return false;
+  }
+
+  // 処理中の再実行を防ぐ
+  battle.phase = "advancing";
+
+  // 双方の使用カードを捨て札へ移す
+  for (const participant of [battle.player, battle.cpu]) {
+    participant.discard.push(participant.field);
+    participant.field = null;
+  }
+
+  battle.turn += 1;
+  battle.lastResult = null;
+
+  // どちらかが引けないなら、ドロー前にライフを比較する
+  if (
+    battle.player.deck.length === 0 ||
+    battle.cpu.deck.length === 0
+  ) {
+    battle.phase = "finished";
+    battle.endReason = "deck";
+
+    battle.outcome =
+      battle.player.life === battle.cpu.life
+        ? "draw"
+        : battle.player.life > battle.cpu.life
+          ? "player"
+          : "cpu";
+
+    return true;
+  }
+
+  // 2ターン目以降は双方が1枚引く
+  drawCard(battle.player);
+  drawCard(battle.cpu);
+
+  battle.phase = "choosing";
 
   return true;
 }
