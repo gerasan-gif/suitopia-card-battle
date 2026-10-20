@@ -159,3 +159,23 @@ function createBgmToggleButton() {
 
   return button;
 }
+
+// ダメージ効果音
+const damageSe = new Audio("audio/damage_hit.wav");
+
+damageSe.preload = "auto";
+damageSe.volume = 0.7;
+
+
+// ダメージ音を先頭から再生する
+function playDamageSe() {
+  damageSe.currentTime = 0;
+
+  damageSe.play().catch((error) => {
+    if (error.name === "AbortError") {
+      return;
+    }
+
+    console.warn("ダメージ音を再生できませんでした。", error);
+  });
+}

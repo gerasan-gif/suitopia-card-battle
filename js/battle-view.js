@@ -829,6 +829,19 @@ function createBattleActions() {
             return;
           }
 
+          const result = gameState.battle.lastResult;
+
+          // どちらかにダメージが発生したら1回鳴らす
+          if (
+            result &&
+            (
+              result.playerDamage > 0 ||
+              result.cpuDamage > 0
+            )
+          ) {
+            playDamageSe();
+          }
+
           renderScreen();
 
           app.querySelector(
