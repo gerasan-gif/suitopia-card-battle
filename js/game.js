@@ -129,10 +129,55 @@ function createScreenHeading(label, hidden = false) {
   return heading;
 }
 
+// 先読みした画像を保持する
+const battleImageCache = new Map();
+
+
+// 対戦で使う画像を先読みする
+function preloadBattleImages() {
+  const sources = new Set([
+    "images/02_card_reverse.webp",
+
+    // キャラクター画像
+    ...CHARACTERS.map((character) => character.image),
+
+    // カードのイラスト・枠・スート
+    ...CARDS.flatMap((card) => [
+      card.image,
+      card.frame,
+      card.suit
+    ]),
+
+    // 攻撃・防御・フェイントのアイコン
+    ...Object.values(CARD_TYPES).map((type) => type.icon)
+  ]);
+
+  sources.forEach((source) => {
+    // 読み込み済み・読み込み中なら追加しない
+    if (battleImageCache.has(source)) {
+      return;
+    }
+
+    const image = new Image();
+
+    battleImageCache.set(source, image);
+
+    image.src = source;
+
+    // ダウンロードに加えて、表示の準備も進める
+    image.decode().catch((error) => {
+      battleImageCache.delete(source);
+
+      console.warn(
+        `画像を先読みできませんでした: ${source}`,
+        error
+      );
+    });
+  });
+}
 
 // 画面を切り替える
 function changeScreen(screen) {
-  // 対戦画面を離れる場合はBGMを停止する
   if (screen !== "battle") {
     stopBattleBgm();
   }
@@ -143,6 +188,11 @@ function changeScreen(screen) {
   window.scrollTo(0, 0);
 
   app.querySelector("h1")?.focus();
+
+  // キャラクター選択画面で対戦画像の先読みを始める
+  if (screen === "character-select") {
+    preloadBattleImages();
+  }
 }
 
 
