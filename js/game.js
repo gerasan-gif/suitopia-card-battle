@@ -203,7 +203,7 @@ function createTitleScreen(text) {
 
   const image = createCardImage(
     "title-image",
-    "images/01_start.png",
+    "images/01_start.webp",
     text.imageAlt
   );
 

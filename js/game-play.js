@@ -2,7 +2,7 @@
 const CHARACTERS = [
   {
     id: "fuka",
-    image: "images/10_fuka_select.png",
+    image: "images/10_fuka_select.webp",
     counts: {
       attack: 5,
       defence: 5,
@@ -15,7 +15,7 @@ const CHARACTERS = [
   },
   {
     id: "anna",
-    image: "images/20_anna_select.png",
+    image: "images/20_anna_select.webp",
     counts: {
       attack: 4,
       defence: 7,
@@ -28,7 +28,7 @@ const CHARACTERS = [
   },
   {
     id: "shizuku",
-    image: "images/30_shizuku_select.png",
+    image: "images/30_shizuku_select.webp",
     counts: {
       attack: 7,
       defence: 4,
@@ -41,7 +41,7 @@ const CHARACTERS = [
   },
   {
     id: "chihiro",
-    image: "images/40_chihiro_select.png",
+    image: "images/40_chihiro_select.webp",
     counts: {
       attack: 4,
       defence: 4,

@@ -156,7 +156,7 @@ function createBattlePile(participant, kind, side) {
     visual.append(
       createCardImage(
         "battle-card-back",
-        "images/02_card_reverse.png"
+        "images/02_card_reverse.webp"
       )
     );
   } else {
@@ -245,7 +245,7 @@ function createOpponentHand(participant) {
     hand.append(
       createCardImage(
         "battle-card-back",
-        "images/02_card_reverse.png"
+        "images/02_card_reverse.webp"
       )
     );
   });
@@ -367,7 +367,7 @@ function createBattleField(label, side, cardData = null) {
     slot.append(
       createCardImage(
         "battle-card-back",
-        "images/02_card_reverse.png"
+        "images/02_card_reverse.webp"
       )
     );
   }

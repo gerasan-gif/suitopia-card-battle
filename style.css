@@ -219,7 +219,7 @@ button:focus-visible {
 
   background:
     linear-gradient(#080e2280, #080e22b3),
-    url("images/01_start.png") center / cover no-repeat;
+    url("images/01_start.webp") center / cover no-repeat;
 }
 
 .main-menu-screen {
