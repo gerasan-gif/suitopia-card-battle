@@ -219,7 +219,9 @@ button:focus-visible {
 
   background:
     linear-gradient(#080e2280, #080e22b3),
-    url("images/01_start.webp") center / cover no-repeat;
+    url("images/01_start.webp") center / contain no-repeat;
+
+  background-color: #0b1022;
 }
 
 .main-menu-screen {
@@ -1345,10 +1347,11 @@ button:focus-visible {
   }
 
     /* タイトル画面を表示領域の高さに収める */
-  .app-title .title-screen {
-    height: 100svh;
-    min-height: 0;
-    padding: 0;
+  .app-title .title-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
   }
 
   /* 左にタイトル画像、右に操作エリア */
