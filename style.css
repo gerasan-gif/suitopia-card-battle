@@ -1343,4 +1343,83 @@ button:focus-visible {
     width: 100%;
     gap: 12px;
   }
+
+    /* タイトル画面を表示領域の高さに収める */
+  .app-title .title-screen {
+    height: 100svh;
+    min-height: 0;
+    padding: 0;
+  }
+
+  /* 左にタイトル画像、右に操作エリア */
+  .app-title .title-stage {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(180px, 24vw, 220px);
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+  }
+
+  /* 画像全体を切り取らずに表示 */
+  .app-title .title-image {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    object-fit: contain;
+    object-position: center;
+  }
+
+  /* ボタンを画像から独立させる */
+  .app-title .title-menu {
+    position: static;
+    transform: none;
+
+    width: 100%;
+    margin: 0;
+    gap: 12px;
+  }
+
+  .app-title .title-menu > .menu-button {
+    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 15px;
+  }
+
+  .app-title .title-menu .language-controls {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .app-title .title-menu .language-button {
+    min-width: 80px;
+    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  /* 対戦中のメニューを山札より上へ */
+  .battle-menu-trigger {
+    top: 4%;
+    right: 3%;
+
+    min-width: 88px;
+    min-height: 44px;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  /* ターン表示はメニューボタンの左へ */
+  .battle-turn {
+    top: 5%;
+    right: 23%;
+  }
 }
