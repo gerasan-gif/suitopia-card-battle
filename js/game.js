@@ -246,20 +246,25 @@ function createTitleScreen(text) {
   const screen = document.createElement("section");
   screen.className = "intro-screen";
 
-  const heading = createScreenHeading(text.title, true);
+  const heading = createScreenHeading(
+    text.title,
+    true
+  );
 
-  // 画面全体を押せるようにする
-  // 見た目は通常のボタンにしない
+  // 余白も含めて画面全体をクリック・タップ可能にする
   const startArea = document.createElement("button");
   startArea.type = "button";
   startArea.className = "intro-start";
-  startArea.setAttribute("aria-label", text.openMenu);
+  startArea.setAttribute(
+    "aria-label",
+    "Click or Tap to Start"
+  );
 
   startArea.addEventListener("click", () => {
     changeScreen("menu");
   });
 
-  // 画像と文字を同じ枠に収める
+  // 画像と案内文字を同じ枠に入れる
   const stage = document.createElement("span");
   stage.className = "intro-stage";
 
