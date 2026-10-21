@@ -244,37 +244,43 @@ function createLanguageControls() {
 // タイトル画面
 function createTitleScreen(text) {
   const screen = document.createElement("section");
-  screen.className = "title-screen";
+  screen.className = "intro-screen";
 
   const heading = createScreenHeading(text.title, true);
 
-  const stage = document.createElement("div");
-  stage.className = "title-stage";
+  // 画面全体を押せるようにする
+  // 見た目は通常のボタンにしない
+  const startArea = document.createElement("button");
+  startArea.type = "button";
+  startArea.className = "intro-start";
+  startArea.setAttribute("aria-label", text.openMenu);
+
+  startArea.addEventListener("click", () => {
+    changeScreen("menu");
+  });
+
+  // 画像と文字を同じ枠に収める
+  const stage = document.createElement("span");
+  stage.className = "intro-stage";
 
   const image = createCardImage(
-    "title-image",
+    "intro-image",
     "images/01_start.webp",
-    text.imageAlt
+    ""
   );
+  image.draggable = false;
 
-  const menu = document.createElement("div");
-  menu.className = "title-menu";
+  const prompt = document.createElement("span");
+  prompt.className = "intro-prompt";
+  prompt.lang = "en";
+  prompt.textContent = "Click or Tap to Start";
 
-  menu.append(
-    createMenuButton(
-      text.openMenu,
-      () => changeScreen("menu"),
-      true
-    ),
-    createLanguageControls()
-  );
-
-  stage.append(image, menu);
-  screen.append(heading, stage);
+  stage.append(image, prompt);
+  startArea.append(stage);
+  screen.append(heading, startArea);
 
   return screen;
 }
-
 
 // メインメニュー画面
 function createMainMenuScreen(text) {
