@@ -351,14 +351,6 @@ function createBattleField(label, side, cardData = null) {
 
     bindHandCardInteraction(slot, cardData, () => {});
 
-    // キーボードでも拡大内容を確認できるようにする
-    slot.addEventListener("focus", () => {
-      showHoverPreview(cardData);
-    });
-
-    slot.addEventListener("blur", () => {
-      hideHoverPreview();
-    });
   } else {
     slot.classList.add("has-card");
 
