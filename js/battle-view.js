@@ -333,6 +333,8 @@ function createBattleField(label, side, cardData = null) {
   if (!cardData) {
     slot.setAttribute("aria-label", label);
   } else if (revealed) {
+    slot.classList.add("has-card", "is-revealed");
+
     slot.append(
       createCard(cardData, language)
     );
