@@ -537,8 +537,11 @@ button:focus-visible {
   color: #ecd7a0;
 }
 
-/* キャラ選択：見出し・操作を残し、一覧だけスクロール */
-.app-character-select {
+@media (pointer: coarse) and (max-width: 1000px)
+  and (max-height: 500px) and (orientation: landscape) {
+
+  /* キャラ選択：見出し・操作を残し、一覧だけスクロール */
+  .app-character-select {
   height: 100vh;
   height: 100svh;
   min-height: 0;
@@ -548,71 +551,65 @@ button:focus-visible {
     max(12px, env(safe-area-inset-right))
     max(12px, env(safe-area-inset-bottom))
     max(12px, env(safe-area-inset-left));
-}
+  }
 
-.app-character-select .content-screen {
-  height: 100%;
-  min-height: 0;
+  .app-character-select .content-screen {
+    height: 100%;
+    min-height: 0;
 
-  display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
-  justify-items: center;
-  align-items: center;
-  gap: 10px;
-}
+    display: grid;
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+    justify-items: center;
+    align-items: center;
+    gap: 10px;
+  }
 
-.app-character-select .screen-heading {
-  font-size: clamp(20px, 3vw, 30px);
-}
+  .app-character-select .screen-heading {
+    font-size: clamp(20px, 3vw, 30px);
+  }
 
-.app-character-select .screen-message {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
-}
+  .app-character-select .screen-message {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
 
-.app-character-select .character-list {
-  height: 100%;
-  min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-
-  align-content: start;
-  align-items: start;
-  gap: 12px;
-  padding: 6px;
-}
-
-.app-character-select .character-portrait {
-  max-height: 260px;
-  max-height: min(260px, 38svh);
-}
-
-.app-character-select .character-choice {
-  padding-bottom: 12px;
-  gap: 8px;
-}
-
-.app-character-select .character-choice-name,
-.app-character-select .character-choice-style {
-  max-width: 100%;
-  padding-inline: 6px;
-  overflow-wrap: anywhere;
-}
-
-.app-character-select .character-choice-name {
-  font-size: 16px;
-}
-
-.app-character-select .character-choice-style {
-  font-size: 13px;
-}
-
-/* 縦向きなど、横幅が狭い場合は2列 */
-@media (max-width: 600px) {
   .app-character-select .character-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    height: 100%;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+
+    align-content: start;
+    align-items: start;
+    gap: 12px;
+    padding: 6px;
+  }
+
+  .app-character-select .character-portrait {
+    max-height: 260px;
+    max-height: min(260px, 38svh);
+  }
+
+  .app-character-select .character-choice {
+    padding-bottom: 12px;
+    gap: 8px;
+  }
+
+  .app-character-select .character-choice-name,
+  .app-character-select .character-choice-style {
+    max-width: 100%;
+    padding-inline: 6px;
+    overflow-wrap: anywhere;
+  }
+
+  .app-character-select .character-choice-name {
+    font-size: 16px;
+  }
+
+  .app-character-select .character-choice-style {
+    font-size: 13px;
   }
 }
 
@@ -1442,11 +1439,13 @@ button:focus-visible {
     right: 23%;
   }
 
-    /* キャラ選択：見出しと言語ボタンを横並びにする */
-  .app-character-select .content-screen {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
-    gap: 8px;
+  @media (pointer: coarse) and (max-width: 1000px) {
+      /* キャラ選択：見出しと言語ボタンを横並びにする */
+    .app-character-select .content-screen {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      gap: 8px;
+    }
   }
 
   .app-character-select .screen-heading {
