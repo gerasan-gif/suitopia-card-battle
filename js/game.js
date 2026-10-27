@@ -434,7 +434,7 @@ function renderScreen() {
       break;
 
     case "character-select":
-      app.className = "app-content";
+      app.className = "app-content app-character-select";
       screen = createCharacterSelectScreen();
       break;
     

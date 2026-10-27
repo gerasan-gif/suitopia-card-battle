@@ -1008,12 +1008,20 @@ function openDiscardList(side, trigger) {
 
   panel.append(heading, summary);
 
+  // カードや説明を入れるスクロール領域
+  const body = document.createElement("div");
+  body.className = "discard-body";
+
+  // 開いたときは、下の閉じるボタンではなく見出しにフォーカス
+  heading.tabIndex = -1;
+  heading.autofocus = true;
+
   if (cards.length === 0) {
     const message = document.createElement("p");
     message.className = "screen-message";
     message.textContent = text.empty;
 
-    panel.append(message);
+    body.append(message);
   } else {
     const description = document.createElement("p");
     description.className = "discard-description";
@@ -1034,7 +1042,7 @@ function openDiscardList(side, trigger) {
       list.append(item);
     });
 
-    panel.append(description, list);
+    body.append(description, list);
   }
 
   const closeButton = createMenuButton(
@@ -1043,7 +1051,7 @@ function openDiscardList(side, trigger) {
   );
 
   closeButton.autofocus = true;
-  panel.append(closeButton);
+  panel.append(body, closeButton);
 
   dialog.append(panel);
 

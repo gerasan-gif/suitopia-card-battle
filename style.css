@@ -1,4 +1,4 @@
-/* 蜈ｨ菴� */
+/*  */
 * {
   box-sizing: border-box;
 }
@@ -537,6 +537,85 @@ button:focus-visible {
   color: #ecd7a0;
 }
 
+/* キャラ選択：見出し・操作を残し、一覧だけスクロール */
+.app-character-select {
+  height: 100vh;
+  height: 100svh;
+  min-height: 0;
+
+  padding:
+    max(12px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+}
+
+.app-character-select .content-screen {
+  height: 100%;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  justify-items: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-character-select .screen-heading {
+  font-size: clamp(20px, 3vw, 30px);
+}
+
+.app-character-select .screen-message {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.app-character-select .character-list {
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+
+  align-content: start;
+  align-items: start;
+  gap: 12px;
+  padding: 6px;
+}
+
+.app-character-select .character-portrait {
+  max-height: 260px;
+  max-height: min(260px, 38svh);
+}
+
+.app-character-select .character-choice {
+  padding-bottom: 12px;
+  gap: 8px;
+}
+
+.app-character-select .character-choice-name,
+.app-character-select .character-choice-style {
+  max-width: 100%;
+  padding-inline: 6px;
+  overflow-wrap: anywhere;
+}
+
+.app-character-select .character-choice-name {
+  font-size: 16px;
+}
+
+.app-character-select .character-choice-style {
+  font-size: 13px;
+}
+
+/* 縦向きなど、横幅が狭い場合は2列 */
+@media (max-width: 600px) {
+  .app-character-select .character-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* 蟇ｾ謌ｦ逕ｻ髱｢ */
 .app-battle {
   min-height: 100vh;
@@ -1061,11 +1140,15 @@ button:focus-visible {
 .discard-dialog {
   width: min(1000px, calc(100% - 32px));
 
+  height: min(760px, calc(100vh - 32px));
+  height: min(760px, calc(100svh - 32px));
+
   max-height: calc(100vh - 32px);
   max-height: calc(100svh - 32px);
 
+  margin: auto;
   padding: 0;
-  overflow: auto;
+  overflow: hidden;
 
   border: 1px solid #c7a566;
   border-radius: 16px;
@@ -1080,12 +1163,31 @@ button:focus-visible {
 }
 
 .discard-panel {
-  padding: clamp(16px, 3vw, 28px);
+  height: 100%;
+  min-height: 0;
+  padding: clamp(10px, 2vw, 20px);
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  justify-items: center;
+  gap: 10px;
+}
+
+.discard-body {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+
+  /* カードの枠やフォーカス表示用の余白 */
+  padding: 4px;
+}
+
+.discard-body .discard-description {
+  margin-bottom: 12px;
 }
 
 .discard-panel .screen-heading {
@@ -1118,7 +1220,7 @@ button:focus-visible {
   font-size: 14px;
 }
 
-/* 謐ｨ縺ｦ譛ｭ荳隕ｧ�医せ繧ｯ繝ｭ繝ｼ繝ｫ縺ｯ .discard-dialog 縺ｧ陦後≧�� */
+/* 捨て札のカード一覧。スクロールは .discard-body で行う */
 .discard-card-grid {
   width: 100%;
   margin: 0;
