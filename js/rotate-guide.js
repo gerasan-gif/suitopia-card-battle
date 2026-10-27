@@ -5,7 +5,7 @@ rotateGuide.setAttribute("aria-labelledby", "rotate-guide-heading");
 
 const rotateHeading = document.createElement("h2");
 rotateHeading.id = "rotate-guide-heading";
-rotateHeading.textContent = "スマートフォンを横向きにしてください";
+rotateHeading.textContent = "端末を横向きにしてください";
 rotateHeading.tabIndex = -1;
 rotateHeading.autofocus = true;
 

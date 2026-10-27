@@ -1599,8 +1599,8 @@ button:focus-visible {
 
 .rotate-guide h2 {
   margin: 0;
-  font-size: 22px;
-  line-height: 1.7;
+  font-size: clamp(16px, 4.5vw, 22px);
+  line-height: 1.5;
 }
 
 .rotate-guide h2:focus {
