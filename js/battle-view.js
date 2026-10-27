@@ -277,33 +277,28 @@ function createPlayerHand(participant) {
       `${cardData.lang[language].name} / ${
         language === "ja"
           ? canSelect
-            ? "タップでセット、長押しで拡大"
-            : "長押しで拡大"
-          : canSelect
-            ? "Tap to play, hold to enlarge"
-            : "Hold to enlarge"
+          ? "タップで確認、長押しで拡大"
+          : "長押しで拡大"
+        : canSelect
+          ? "Tap to review, hold to enlarge"
+          : "Hold to enlarge"
       }`
     );
 
     item.append(createCard(cardData, language));
 
-    if (!canSelect) {
-      item.classList.add("is-locked");
+    if (canSelect) {
+      item.setAttribute("aria-haspopup", "dialog");
     }
 
-    // 短いタップ・クリック・キーボードで選択
+    // 短いタップ・クリックでは、従来の確認画面を開く
     const selectCard = () => {
-      if (!canSelect || !setPlayerCard(index)) {
+      if (!canSelect) {
         return;
       }
 
       hideHoverPreview();
-      battleUI.previewIndex = null;
-      renderScreen();
-
-      app.querySelector(
-        ".battle-field-player .battle-field-slot"
-      )?.focus();
+      openCardPreview(index);
     };
 
     bindHandCardInteraction(item, cardData, selectCard);
@@ -338,41 +333,31 @@ function createBattleField(label, side, cardData = null) {
   if (!cardData) {
     slot.setAttribute("aria-label", label);
   } else if (revealed) {
-    slot.classList.add("has-card", "is-revealed");
-
-    slot.setAttribute(
-      "aria-label",
-      `${label}: ${cardData.lang[language].name}`
-    );
-
     slot.append(
       createCard(cardData, language)
     );
 
-    // 表になったカードは、押すと拡大する
+    // 公開済みのカードも、長押し・マウスを重ねて拡大
     slot.tabIndex = 0;
-    slot.setAttribute("role", "button");
-    slot.setAttribute("aria-haspopup", "dialog");
 
     slot.setAttribute(
       "aria-label",
       `${label}: ${cardData.lang[language].name} / ${
-        language === "ja" ? "拡大表示" : "Enlarge"
-      }`
-    );
+        language === "ja"
+          ? "長押し、またはマウスを重ねて拡大"
+          : "Hold or hover to enlarge"
+        }`
+      );
 
-    slot.addEventListener("click", () => {
-      openRevealedCardPreview(cardData, slot);
+    bindHandCardInteraction(slot, cardData, () => {});
+
+    // キーボードでも拡大内容を確認できるようにする
+    slot.addEventListener("focus", () => {
+      showHoverPreview(cardData);
     });
 
-    slot.addEventListener("keydown", (event) => {
-      if (
-        !event.repeat &&
-        (event.key === "Enter" || event.key === " ")
-      ) {
-        event.preventDefault();
-        openRevealedCardPreview(cardData, slot);
-      }
+    slot.addEventListener("blur", () => {
+      hideHoverPreview();
     });
   } else {
     slot.classList.add("has-card");
@@ -1234,56 +1219,4 @@ function bindHandCardInteraction(item, cardData, selectCard) {
       hideHoverPreview();
     }
   });
-}
-
-// 公開済みの場のカードを拡大する
-function openRevealedCardPreview(cardData, trigger) {
-  if (app.querySelector(".revealed-card-dialog")) {
-    return;
-  }
-
-  hideHoverPreview();
-
-  const language = gameState.language;
-  const dialog = document.createElement("dialog");
-  dialog.className = "revealed-card-dialog";
-  dialog.setAttribute(
-    "aria-label",
-    cardData.lang[language].name
-  );
-
-  const panel = document.createElement("div");
-  panel.className = "revealed-card-panel";
-
-  const closeButton = createMenuButton(
-    language === "ja" ? "閉じる" : "Close",
-    () => dialog.close()
-  );
-
-  closeButton.autofocus = true;
-
-  panel.append(
-    createCard(cardData, language),
-    closeButton
-  );
-
-  dialog.append(panel);
-
-  // カードやボタン以外の外側を押しても閉じる
-  dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) {
-      dialog.close();
-    }
-  });
-
-  dialog.addEventListener("close", () => {
-    dialog.remove();
-
-    if (trigger.isConnected) {
-      trigger.focus();
-    }
-  });
-
-  app.append(dialog);
-  dialog.showModal();
 }
