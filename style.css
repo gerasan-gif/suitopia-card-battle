@@ -1636,17 +1636,23 @@ button:focus-visible {
   outline-offset: 4px;
 }
 
-/* 公開済みの場のカード */
+/* 公開済みの場のカード：操作は外側の枠で受け取る */
 .battle-field-slot.is-revealed {
   cursor: zoom-in;
   touch-action: manipulation;
-
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
+  pointer-events: auto;
 }
 
-.battle-field-slot.is-revealed > .card {
+/* 枠とその中身で、Safariの長押しメニュー・選択を抑える */
+.battle-field-slot.is-revealed,
+.battle-field-slot.is-revealed * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 画像や文字に触れても、外側の枠で長押しを判定する */
+.battle-field-slot.is-revealed * {
   pointer-events: none;
 }
 
