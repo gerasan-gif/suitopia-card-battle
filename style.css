@@ -1441,6 +1441,124 @@ button:focus-visible {
     top: 5%;
     right: 23%;
   }
+
+    /* キャラ選択：見出しと言語ボタンを横並びにする */
+  .app-character-select .content-screen {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .app-character-select .screen-heading {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .app-character-select .language-controls {
+    grid-column: 2;
+    grid-row: 1;
+    gap: 8px;
+  }
+
+  .app-character-select .language-button {
+    min-width: 80px;
+    min-height: 44px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .app-character-select .screen-message {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 13px;
+  }
+
+  .app-character-select .character-list {
+    grid-column: 1 / -1;
+    grid-row: 3;
+
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 100%;
+    gap: 8px;
+  }
+
+  /* 各キャラの枠内で、名前を残して画像の高さを調整 */
+  .app-character-select .character-choice {
+    height: 100%;
+    min-height: 0;
+    width: 100%;
+    padding: 6px;
+
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    justify-items: center;
+    gap: 4px;
+  }
+
+  .app-character-select .character-portrait {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: auto;
+    object-fit: contain;
+  }
+
+  .app-character-select .character-choice-name {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .app-character-select .character-choice-style {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .app-character-select .content-screen > .menu-button {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    min-height: 44px;
+    padding: 6px 12px;
+    font-size: 15px;
+  }
+
+  /* 捨て札：見出しなどを小さくし、カード用の高さを確保 */
+  .discard-panel {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .discard-panel .screen-heading {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .discard-summary {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .discard-body .discard-description {
+    display: none;
+  }
+
+  /* 横向きでは、カード全体を確認しやすいサイズにする */
+  .discard-card-item > .card {
+    width: min(180px, max(48px, calc((100svh - 172px) * 0.75)));
+    max-width: 100%;
+  }
+
+  .discard-card-grid {
+    gap: 10px;
+  }
+
+  .discard-panel > .menu-button {
+    min-height: 44px;
+    padding: 6px 12px;
+    font-size: 15px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
