@@ -265,62 +265,54 @@ function createPlayerHand(participant) {
   participant.hand.forEach((cardData, index) => {
     const item = document.createElement("div");
     item.className = "battle-hand-card";
+    item.tabIndex = 0;
+    item.setAttribute("role", "button");
 
-    const cardText = cardData.lang[language];
+    const canSelect =
+      !participant.field &&
+      gameState.battle.phase === "choosing";
 
     item.setAttribute(
       "aria-label",
-      `${cardText.name} / ${text.selectCard}`
+      `${cardData.lang[language].name} / ${
+        language === "ja"
+          ? canSelect
+            ? "タップでセット、長押しで拡大"
+            : "長押しで拡大"
+          : canSelect
+            ? "Tap to play, hold to enlarge"
+            : "Hold to enlarge"
+      }`
     );
 
-    item.append(
-      createCard(cardData, language)
-    );
+    item.append(createCard(cardData, language));
 
-    if (
-      participant.field ||
-      gameState.battle.phase !== "choosing"
-    ) {
-      // セット後は、残りの手札を確認だけできる状態にする
+    if (!canSelect) {
       item.classList.add("is-locked");
-    } else {
-      item.setAttribute("role", "button");
-      item.tabIndex = 0;
-      item.setAttribute("aria-haspopup", "dialog");
-
-      item.addEventListener("click", () => {
-        openCardPreview(index);
-      });
-
-      item.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          openCardPreview(index);
-        }
-      });
     }
 
-    // マウスでの拡大表示
-    item.addEventListener("pointerenter", (event) => {
-      const canHover = window.matchMedia(
-        "(hover: hover) and (pointer: fine)"
-      ).matches;
-
-      if (event.pointerType === "mouse" && canHover) {
-        showHoverPreview(cardData);
+    // 短いタップ・クリック・キーボードで選択
+    const selectCard = () => {
+      if (!canSelect || !setPlayerCard(index)) {
+        return;
       }
-    });
 
-    item.addEventListener("pointerleave", () => {
       hideHoverPreview();
-    });
+      battleUI.previewIndex = null;
+      renderScreen();
+
+      app.querySelector(
+        ".battle-field-player .battle-field-slot"
+      )?.focus();
+    };
+
+    bindHandCardInteraction(item, cardData, selectCard);
 
     hand.append(item);
   });
 
   return hand;
 }
-
 
 // 中央のカードを出す場所
 function createBattleField(label, side, cardData = null) {
@@ -356,6 +348,32 @@ function createBattleField(label, side, cardData = null) {
     slot.append(
       createCard(cardData, language)
     );
+
+    // 表になったカードは、押すと拡大する
+    slot.tabIndex = 0;
+    slot.setAttribute("role", "button");
+    slot.setAttribute("aria-haspopup", "dialog");
+
+    slot.setAttribute(
+      "aria-label",
+      `${label}: ${cardData.lang[language].name} / ${
+        language === "ja" ? "拡大表示" : "Enlarge"
+      }`
+    );
+
+    slot.addEventListener("click", () => {
+      openRevealedCardPreview(cardData, slot);
+    });
+
+    slot.addEventListener("keydown", (event) => {
+      if (
+        !event.repeat &&
+        (event.key === "Enter" || event.key === " ")
+      ) {
+        event.preventDefault();
+        openRevealedCardPreview(cardData, slot);
+      }
+    });
   } else {
     slot.classList.add("has-card");
 
@@ -1077,5 +1095,195 @@ function openDiscardList(side, trigger) {
   }
 
   screen.append(dialog);
+  dialog.showModal();
+}
+
+// 手札のタップ・長押し・マウス操作
+function bindHandCardInteraction(item, cardData, selectCard) {
+  let timer = null;
+  let activePointer = null;
+  let startX = 0;
+  let startY = 0;
+  let suppressClick = false;
+  let holding = false;
+
+  const clearTimer = () => {
+    window.clearTimeout(timer);
+    timer = null;
+  };
+
+  const finishPress = () => {
+    clearTimer();
+    activePointer = null;
+
+    if (holding) {
+      hideHoverPreview();
+      holding = false;
+    }
+  };
+
+  item.addEventListener("pointerdown", (event) => {
+    if (
+      event.pointerType === "mouse" ||
+      !event.isPrimary ||
+      activePointer !== null
+    ) {
+      return;
+    }
+
+    activePointer = event.pointerId;
+    startX = event.clientX;
+    startY = event.clientY;
+    suppressClick = false;
+
+    // 指がカードの外に出ても、離したことを検知する
+    item.setPointerCapture(event.pointerId);
+
+    timer = window.setTimeout(() => {
+      timer = null;
+
+      if (!item.isConnected) {
+        finishPress();
+        return;
+      }
+
+      holding = true;
+      suppressClick = true;
+      showHoverPreview(cardData);
+    }, 450);
+  });
+
+  item.addEventListener("pointermove", (event) => {
+    if (event.pointerId !== activePointer) {
+      return;
+    }
+
+    const distance = Math.hypot(
+      event.clientX - startX,
+      event.clientY - startY
+    );
+
+    if (distance > 12) {
+      clearTimer();
+      suppressClick = true;
+
+      if (holding) {
+        hideHoverPreview();
+        holding = false;
+      }
+    }
+  });
+
+  item.addEventListener("pointerup", (event) => {
+    if (event.pointerId === activePointer) {
+      finishPress();
+    }
+  });
+
+  item.addEventListener("pointercancel", (event) => {
+    if (event.pointerId === activePointer) {
+      suppressClick = true;
+      finishPress();
+    }
+  });
+
+  item.addEventListener("lostpointercapture", (event) => {
+    if (event.pointerId === activePointer) {
+      suppressClick = true;
+      finishPress();
+    }
+  });
+
+  item.addEventListener("click", (event) => {
+    // 長押し・指の移動後のクリックは選択に使わない
+    if (suppressClick && event.detail !== 0) {
+      event.preventDefault();
+      return;
+    }
+
+    selectCard();
+  });
+
+  item.addEventListener("keydown", (event) => {
+    if (
+      !event.repeat &&
+      (event.key === "Enter" || event.key === " ")
+    ) {
+      event.preventDefault();
+      selectCard();
+    }
+  });
+
+  // スマホの長押しメニューを抑える
+  item.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+  });
+
+  // パソコンでは既存のマウス拡大を使用
+  item.addEventListener("pointerenter", (event) => {
+    if (
+      event.pointerType === "mouse" &&
+      window.matchMedia("(hover: hover)").matches
+    ) {
+      showHoverPreview(cardData);
+    }
+  });
+
+  item.addEventListener("pointerleave", (event) => {
+    if (event.pointerType === "mouse") {
+      hideHoverPreview();
+    }
+  });
+}
+
+// 公開済みの場のカードを拡大する
+function openRevealedCardPreview(cardData, trigger) {
+  if (app.querySelector(".revealed-card-dialog")) {
+    return;
+  }
+
+  hideHoverPreview();
+
+  const language = gameState.language;
+  const dialog = document.createElement("dialog");
+  dialog.className = "revealed-card-dialog";
+  dialog.setAttribute(
+    "aria-label",
+    cardData.lang[language].name
+  );
+
+  const panel = document.createElement("div");
+  panel.className = "revealed-card-panel";
+
+  const closeButton = createMenuButton(
+    language === "ja" ? "閉じる" : "Close",
+    () => dialog.close()
+  );
+
+  closeButton.autofocus = true;
+
+  panel.append(
+    createCard(cardData, language),
+    closeButton
+  );
+
+  dialog.append(panel);
+
+  // カードやボタン以外の外側を押しても閉じる
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) {
+      dialog.close();
+    }
+  });
+
+  dialog.addEventListener("close", () => {
+    dialog.remove();
+
+    if (trigger.isConnected) {
+      trigger.focus();
+    }
+  });
+
+  app.append(dialog);
   dialog.showModal();
 }

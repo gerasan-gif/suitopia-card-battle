@@ -947,14 +947,17 @@ button:focus-visible {
   cursor: default;
 }
 
-/* 逶､髱｢縺ｮ蟾ｦ荳ｭ螟ｮ縺ｫ諡｡螟ｧ陦ｨ遉ｺ */
+/* 手札の拡大表示 */
 .battle-hover-preview {
-  position: absolute;
-  z-index: 10;
+  position: fixed;
+  z-index: 100;
 
-  top: 30%;
-  left: 10%;
-  width: 22%;
+  top: 50%;
+  left: 24%;
+  transform: translate(-50%, -50%);
+
+  width: min(300px, 38vw, 65vh);
+  width: min(300px, 38vw, 65svh);
 
   pointer-events: none;
   filter: drop-shadow(0 8px 16px #000b);
@@ -1615,4 +1618,78 @@ button:focus-visible {
 
 .rotate-guide::backdrop {
   background: #0b1022;
+}
+
+/* 長押し時の文字選択・画像メニューを抑える */
+.battle-hand-card {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.battle-hand-card img {
+  -webkit-user-drag: none;
+}
+
+/* 公開済みカードの操作 */
+.battle-field-slot.is-revealed[role="button"] {
+  cursor: zoom-in;
+  touch-action: manipulation;
+}
+
+.battle-field-slot.is-revealed:focus-visible {
+  outline: 3px solid #fff4d6;
+  outline-offset: 4px;
+}
+
+/* 場のカードの拡大画面 */
+.revealed-card-dialog {
+  width: 100%;
+  max-width: none;
+
+  height: 100vh;
+  height: 100svh;
+  max-height: none;
+
+  margin: 0;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 0;
+
+  color: #fff4d6;
+  background: transparent;
+  overflow: auto;
+}
+
+.revealed-card-dialog::backdrop {
+  background: #030817d9;
+}
+
+.revealed-card-dialog[open] {
+  display: grid;
+  place-items: center;
+}
+
+.revealed-card-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  max-width: 100%;
+  padding: 12px;
+
+  border: 1px solid #c7a566;
+  border-radius: 16px;
+  background: #0c1429;
+}
+
+.revealed-card-panel > .card {
+  width: min(320px, 76vw, max(48px, calc((100vh - 120px) * 0.7)));
+  width: min(320px, 76vw, max(48px, calc((100svh - 120px) * 0.7)));
+}
+
+.revealed-card-panel > .menu-button {
+  width: 100%;
+  min-height: 44px;
 }
