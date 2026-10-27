@@ -1567,3 +1567,53 @@ button:focus-visible {
     transition: none;
   }
 }
+
+/* スマホ縦向き時の案内 */
+.rotate-guide {
+  position: fixed;
+  inset: 0;
+
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  height: 100svh;
+  max-height: none;
+
+  margin: 0;
+  padding: 24px;
+  overflow: auto;
+  border: 0;
+
+  color: #fff4d6;
+  background: #0b1022;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.rotate-guide[open] {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 20px;
+}
+
+.rotate-guide h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.7;
+}
+
+.rotate-guide h2:focus {
+  outline: none;
+}
+
+.rotate-guide p {
+  margin: 0;
+  color: #dfcfaa;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.rotate-guide::backdrop {
+  background: #0b1022;
+}
