@@ -415,6 +415,11 @@ function createBattleMenu() {
     ),
 
     createMenuButton(
+      language === "ja" ? "デッキ構成" : "Deck Composition",
+      () => showBattleDeckComposition(dialog, panel)
+    ),
+
+    createMenuButton(
       text.chooseAgain,
       () => {
         battleUI.menuOpen = false;
@@ -1213,4 +1218,122 @@ function bindHandCardInteraction(item, cardData, selectCard) {
       hideHoverPreview();
     }
   });
+}
+
+// 対戦メニューから、4人の初期デッキ構成を確認する
+function showBattleDeckComposition(dialog, menuPanel) {
+  const language = gameState.language;
+
+  const text = language === "ja"
+    ? {
+        title: "デッキ構成",
+        description: "各キャラクターの初期構成です（各15枚）。",
+        character: "キャラクター",
+        attack: "攻撃",
+        defence: "防御",
+        feint: "フェイント",
+        back: "メニューへ戻る"
+      }
+    : {
+        title: "Deck Composition",
+        description: "Starting deck for each character (15 cards each).",
+        character: "Character",
+        attack: "Attack",
+        defence: "Defence",
+        feint: "Feint",
+        back: "Back to Menu"
+      };
+
+  const returnFocus = document.activeElement;
+
+  const panel = document.createElement("div");
+  panel.className = "deck-composition-panel";
+
+  const heading = document.createElement("h2");
+
+  // メニューダイアログの既存の aria-labelledby を引き継ぐ
+  heading.id = "battle-menu-heading";
+  heading.className = "screen-heading";
+  heading.textContent = text.title;
+  heading.tabIndex = -1;
+
+  const description = document.createElement("p");
+  description.className = "deck-composition-description";
+  description.textContent = text.description;
+
+  const scrollArea = document.createElement("div");
+  scrollArea.className = "deck-composition-scroll";
+  scrollArea.tabIndex = 0;
+  scrollArea.setAttribute("role", "region");
+  scrollArea.setAttribute("aria-label", text.title);
+
+  const table = document.createElement("table");
+  table.className = "deck-composition-table";
+  table.setAttribute("aria-label", text.title);
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+
+  [
+    text.character,
+    text.attack,
+    text.defence,
+    text.feint
+  ].forEach((label) => {
+    const cell = document.createElement("th");
+    cell.scope = "col";
+    cell.textContent = label;
+    headerRow.append(cell);
+  });
+
+  thead.append(headerRow);
+
+  const tbody = document.createElement("tbody");
+
+  CHARACTERS.forEach((character) => {
+    const row = document.createElement("tr");
+
+    const name = document.createElement("th");
+    name.scope = "row";
+    name.textContent = getCharacterName(
+      character.id,
+      language
+    );
+
+    row.append(name);
+
+    ["attack", "defence", "feint"].forEach((type) => {
+      const cell = document.createElement("td");
+      cell.textContent = character.counts[type];
+      row.append(cell);
+    });
+
+    tbody.append(row);
+  });
+
+  table.append(thead, tbody);
+  scrollArea.append(table);
+
+  const backButton = createMenuButton(
+    text.back,
+    () => {
+      // 元のメニューに戻す
+      dialog.replaceChildren(menuPanel);
+
+      if (returnFocus?.isConnected) {
+        returnFocus.focus();
+      }
+    }
+  );
+
+  panel.append(
+    heading,
+    description,
+    scrollArea,
+    backButton
+  );
+
+  // 同じダイアログ内で表示を切り替える
+  dialog.replaceChildren(panel);
+  heading.focus();
 }
