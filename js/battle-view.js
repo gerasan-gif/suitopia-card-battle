@@ -1229,18 +1229,18 @@ function showBattleDeckComposition(dialog, menuPanel) {
         title: "デッキ構成",
         description: "各キャラクターの初期構成です（各15枚）。",
         character: "キャラクター",
-        attack: "攻撃(赤枠)",
-        defence: "防御(青枠)",
-        feint: "フェイント(紫枠)",
+        attack: "攻撃(赤)",
+        defence: "防御(青)",
+        feint: "フェイント(紫)",
         back: "メニューへ戻る"
       }
     : {
         title: "Deck Composition",
         description: "Starting deck for each character (15 cards each).",
         character: "Character",
-        attack: "Attack(Red frame)",
-        defence: "Defence(Blue frame)",
-        feint: "Feint(Purple frame)",
+        attack: "Attack(Red)",
+        defence: "Defence(Blue)",
+        feint: "Feint(Purple)",
         back: "Back to Menu"
       };
 
