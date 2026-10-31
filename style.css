@@ -29,7 +29,7 @@ button:focus-visible {
   outline-offset: 4px;
 }
 
-/* 髫ｱ�ｭ邵ｺ�ｿ闕ｳ鄙ｫ�｡騾包ｽｨ邵ｺ�ｮ髫募唱�ｽ邵ｺ�ｽ */
+/* 隱ｭ縺ｿ荳翫￡逕ｨ縺ｮ隕句�縺� */
 .visually-hidden {
   position: absolute;
 
@@ -44,7 +44,7 @@ button:focus-visible {
   border: 0;
 }
 
-/* 陷茨ｽｱ鬨ｾ螢ｹ�ｽ髫募唱�ｽ邵ｺ�ｽ */
+/* 蜈ｱ騾壹�隕句�縺� */
 .screen-heading {
   margin: 0;
   text-align: center;
@@ -60,7 +60,7 @@ button:focus-visible {
   outline: none;
 }
 
-/* 郢晢ｽ｡郢昜ｹ斟礼ｹ晢ｽｼ郢晄㈱縺｡郢晢ｽｳ */
+/* 繝｡繝九Η繝ｼ繝懊ち繝ｳ */
 .menu-button {
   width: min(320px, 100%);
   min-height: 48px;
@@ -97,7 +97,7 @@ button:focus-visible {
   transform: translateY(0);
 }
 
-/* 郢ｧ�ｿ郢ｧ�､郢晏現ﾎ晉ｸｺ�ｸ隰鯉ｽｻ郢ｧ荵晢ｿｽ郢ｧ�ｿ郢晢ｽｳ */
+/* 繧ｿ繧､繝医Ν縺ｸ謌ｻ繧九�繧ｿ繝ｳ */
 .text-button {
   width: auto;
   min-height: 36px;
@@ -112,7 +112,7 @@ button:focus-visible {
   font-weight: normal;
 }
 
-/* 髫ｪﾂ髫ｱ讒ｫ�ｽ郢ｧ鬆大ｴ帷ｸｺ�ｽ */
+/* 險隱槫�繧頑崛縺� */
 .language-controls {
   display: flex;
   justify-content: center;
@@ -145,7 +145,7 @@ button:focus-visible {
   border-color: #fff0bb;
 }
 
-/* 郢ｧ�ｿ郢ｧ�､郢晏現ﾎ晞包ｽｻ鬮ｱ�｢�ｽ螟ょ愛陷剃ｸ岩�鬮｢蜿･�ｧ蛹ｺ�｡莠･�ｽ郢ｧ雋樣�邵ｺ菫ｶ譽ｧ邵ｺ�ｫ陷ｿ蠑ｱ�∫ｹｧ�ｽ */
+/* 繧ｿ繧､繝医Ν逕ｻ髱｢�夂判蜒上→髢句ｧ区｡亥�繧貞酔縺俶棧縺ｫ蜿弱ａ繧� */
 .app-title {
   min-height: 100vh;
   min-height: 100svh;
@@ -156,7 +156,7 @@ button:focus-visible {
   background: #0b1022;
 }
 
-/* 髫穂ｹ昶螺騾ｶ�ｮ邵ｺ�ｯ騾包ｽｻ陷剃ｸ岩味邵ｺ蠕個竏ｫ蛻､鬮ｱ�｢陷茨ｽｨ闖ｴ阮呻ｽ帝ｫ｢蜿･�ｧ荵晢ｿｽ郢ｧ�ｿ郢晢ｽｳ邵ｺ�ｨ邵ｺ蜉ｱ窶ｻ隰ｫ蝣ｺ�ｽ諛翫堤ｸｺ髦ｪ�� */
+/* 隕九◆逶ｮ縺ｯ逕ｻ蜒上□縺後∫判髱｢蜈ｨ菴薙ｒ髢句ｧ九�繧ｿ繝ｳ縺ｨ縺励※謫堺ｽ懊〒縺阪ｋ */
 .intro-start {
   position: relative;
   display: grid;
@@ -174,7 +174,7 @@ button:focus-visible {
   background: #0b1022;
 }
 
-/* 01_start.webp 邵ｺ�ｮ驍ｵ�ｦ隶難ｽｪ雎域鱒ﾂ繧具ｽｫ蛟･��ｹ晢ｽｻ陝ｷ�ｽ�ｽ闕ｳ�｡隴�ｽｹ邵ｺ�ｧ騾包ｽｻ鬮ｱ�｢陷�ｽ竊楢愾蠑ｱ�∫ｹｧ�ｽ */
+/* 01_start.webp 縺ｮ邵ｦ讓ｪ豈斐るｫ倥＆繝ｻ蟷��荳｡譁ｹ縺ｧ逕ｻ髱｢蜀�↓蜿弱ａ繧� */
 .intro-stage {
   position: relative;
   display: block;
@@ -219,7 +219,7 @@ button:focus-visible {
   outline-offset: -6px;
 }
 
-/* 郢晢ｽ｡郢ｧ�､郢晢ｽｳ郢晢ｽ｡郢昜ｹ斟礼ｹ晢ｽｼ騾包ｽｻ鬮ｱ�｢ */
+/* 繝｡繧､繝ｳ繝｡繝九Η繝ｼ逕ｻ髱｢ */
 .app-menu {
   min-height: 100vh;
   min-height: 100svh;
@@ -275,7 +275,7 @@ button:focus-visible {
   width: 100%;
 }
 
-/* 郢ｧ�ｫ郢晢ｽｼ郢晄��ｸﾂ髫包ｽｧ郢晢ｽｻ郢晢ｽｫ郢晢ｽｼ郢晢ｽｫ髫ｱ�ｬ隴丞ｼｱ竊醍ｸｺ�ｩ */
+/* 繧ｫ繝ｼ繝我ｸ隕ｧ繝ｻ繝ｫ繝ｼ繝ｫ隱ｬ譏弱↑縺ｩ */
 .app-content {
   min-height: 100vh;
   padding: 24px 16px 48px;
@@ -306,7 +306,7 @@ button:focus-visible {
   line-height: 1.8;
 }
 
-/* 郢晢ｽｫ郢晢ｽｼ郢晢ｽｫ髫ｱ�ｬ隴擾ｿｽ */
+/* 繝ｫ繝ｼ繝ｫ隱ｬ譏� */
 .rules-panel {
   width: min(680px, 100%);
   padding: clamp(20px, 4vw, 32px);
@@ -360,7 +360,7 @@ button:focus-visible {
   gap: 20px;
 }
 
-/* 郢ｧ�ｫ郢晢ｽｼ郢晏ｳｨ�ｽ陜ｨ貅ｷ蠎� */
+/* 繧ｫ繝ｼ繝峨�蝨溷床 */
 .card {
   position: relative;
 
@@ -371,7 +371,7 @@ button:focus-visible {
   container-type: inline-size;
 }
 
-/* 郢ｧ�ｫ郢晢ｽｼ郢晏ｳｨ�ｽ郢ｧ�､郢晢ｽｩ郢ｧ�ｹ郢晢ｿｽ */
+/* 繧ｫ繝ｼ繝峨�繧､繝ｩ繧ｹ繝� */
 .card-art {
   position: absolute;
   z-index: 0;
@@ -385,7 +385,7 @@ button:focus-visible {
   object-position: center top;
 }
 
-/* 郢ｧ�ｫ郢晢ｽｼ郢晏ｳｨ�ｽ隴ｫ�ｽ */
+/* 繧ｫ繝ｼ繝峨�譫� */
 .card-frame {
   position: absolute;
   z-index: 1;
@@ -397,57 +397,56 @@ button:focus-visible {
   pointer-events: none;
 }
 
-/* 陝ｾ�ｦ闕ｳ鄙ｫ�ｽ驕橸ｽｮ鬯俶ｧｭ�ｽ郢晢ｽｼ郢ｧ�ｯ */
-/* 遞ｮ蛻･縺ｯ蜈ｨ繧ｭ繝｣繝ｩ繧ｯ繧ｿ繝ｼ蜈ｱ騾壹�濶ｲ縺ｧ陦ｨ遉ｺ */
-.card[data-type="attack"] { --card-type-color: #9f2033; }
-.card[data-type="defence"] { --card-type-color: #17539b; }
-.card[data-type="feint"] { --card-type-color: #7039a0; }
+/* 蟾ｦ荳翫�遞ｮ鬘槭�繝ｼ繧ｯ */
+.type-icon {
+  position: absolute;
+  z-index: 2;
 
+  left: 14%;
+  top: 6.1%;
+  width: 7%;
+  height: 5.25%;
+
+  object-fit: contain;
+}
+
+/* 荳贋ｸｭ螟ｮ縺ｮ遞ｮ鬘槫錐 */
 .card-header {
   position: absolute;
   z-index: 2;
-  left: 9%;
-  top: 4.5%;
-  width: 82%;
-  height: 10%;
-  box-sizing: border-box;
-  padding: 0 2%;
-  display: grid;
-  grid-template-columns: 12% minmax(0, 1fr) 12%;
+
+  left: 25%;
+  top: 5.15%;
+  width: 50%;
+  height: 7%;
+
+  display: flex;
   align-items: center;
-  gap: 2%;
-  border: 0.5cqw solid #ecd18b;
-  border-radius: 2cqw;
-  background: var(--card-type-color, #172039);
-  color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans JP", sans-serif;
-  font-size: 10.5cqw;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0;
-  text-shadow: 0 1px 2px #0008;
+  justify-content: center;
+
+  color: #ffe9aa;
+
+  font-size: 6.5cqw;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+
+  text-shadow: 0 2px 3px #300;
 }
 
-.card:lang(en) .card-header { font-size: 8.5cqw; }
+/* 蜿ｳ荳翫�繧ｹ繝ｼ繝医�繝ｼ繧ｯ */
+.suit-icon {
+  position: absolute;
+  z-index: 2;
 
-.card-type-label {
-  min-width: 0;
-  text-align: center;
-  white-space: nowrap;
-}
+  right: 13.25%;
+  top: 5.55%;
+  width: 8.5%;
+  height: 6.375%;
 
-.card-header > .type-icon,
-.card-header > .suit-icon {
-  display: block;
-  position: static;
-  width: 100%;
-  height: auto;
-  max-height: 8cqw;
   object-fit: contain;
-  pointer-events: none;
 }
 
-/* 荳矩Κ縺ｮ謚蜷阪�繧ｭ繝｣繝ｩ繧ｯ繧ｿ繝ｼ蜷阪�繝ｫ繝ｼ繝ｫ */
+/* 繧ｫ繝ｼ繝我ｸ矩Κ縺ｮ譁�ｭ励お繝ｪ繧｢ */
 .card-text {
   position: absolute;
   z-index: 2;
@@ -488,7 +487,7 @@ button:focus-visible {
   line-height: 1.3;
 }
 
-/* 郢ｧ�ｭ郢晢ｽ｣郢晢ｽｩ郢ｧ�ｯ郢ｧ�ｿ郢晢ｽｼ鬩包ｽｸ隰夲ｿｽ */
+/* 繧ｭ繝｣繝ｩ繧ｯ繧ｿ繝ｼ驕ｸ謚� */
 .character-list {
   width: 100%;
   display: grid;
@@ -541,7 +540,7 @@ button:focus-visible {
 @media (pointer: coarse) and (max-width: 1000px)
   and (max-height: 500px) and (orientation: landscape) {
 
-  /* 繧ｭ繝｣繝ｩ驕ｸ謚橸ｼ夊ｦ句�縺励�謫堺ｽ懊ｒ谿九＠縲∽ｸ隕ｧ縺�縺代せ繧ｯ繝ｭ繝ｼ繝ｫ */
+  /* キャラ選択：見出し・操作を残し、一覧だけスクロール */
   .app-character-select {
   height: 100vh;
   height: 100svh;
@@ -588,7 +587,7 @@ button:focus-visible {
     padding: 6px;
   }
 
-  /* 逕ｻ蜒城�伜沺繧偵う繝ｩ繧ｹ繝医〒蝓九ａ繧� */
+  /* 画像領域をイラストで埋める */
   .app-character-select .character-portrait {
     display: block;
     width: 100%;
@@ -601,7 +600,7 @@ button:focus-visible {
     object-position: center top;
   }
 
-  /* 蜷榊燕繝ｻ繧ｿ繧､繝励�鬆伜沺繧呈ｮ九☆ */
+  /* 名前・タイプの領域を残す */
   .app-character-select .character-choice {
     height: 100%;
     min-height: 0;
@@ -633,7 +632,7 @@ button:focus-visible {
   }
 }
 
-/* 陝�ｽｾ隰鯉ｽｦ騾包ｽｻ鬮ｱ�｢ */
+/* 蟇ｾ謌ｦ逕ｻ髱｢ */
 .app-battle {
   min-height: 100vh;
   min-height: 100svh;
@@ -649,7 +648,7 @@ button:focus-visible {
   place-items: center;
 }
 
-/* 隶難ｽｪ鬮滂ｽｷ邵ｺ�ｮ騾ｶ�､鬮ｱ�｢郢ｧ蝣､蛻､鬮ｱ�｢陷�ｽ竊楢愾蠑ｱ�∫ｹｧ�ｽ */
+/* 讓ｪ髟ｷ縺ｮ逶､髱｢繧堤判髱｢蜀�↓蜿弱ａ繧� */
 .battle-board {
   position: relative;
 
@@ -684,7 +683,7 @@ button:focus-visible {
     sans-serif;
 }
 
-/* 陷�ｽ�ｽ邵ｺ�ｮ鬯滂ｽｾ郢ｧ鬆第｣ｧ */
+/* 蜀��縺ｮ鬟ｾ繧頑棧 */
 .battle-board::before {
   content: "";
 
@@ -698,7 +697,7 @@ button:focus-visible {
   pointer-events: none;
 }
 
-/* 郢ｧ�ｭ郢晢ｽ｣郢晢ｽｩ郢ｧ�ｯ郢ｧ�ｿ郢晢ｽｼ邵ｺ�ｨ郢晢ｽｩ郢ｧ�､郢晢ｿｽ */
+/* 繧ｭ繝｣繝ｩ繧ｯ繧ｿ繝ｼ縺ｨ繝ｩ繧､繝� */
 .battle-profile {
   position: absolute;
 
@@ -779,7 +778,7 @@ button:focus-visible {
   background: #203f75;
 }
 
-/* CPU邵ｺ�ｮ隰�玄諠� */
+/* CPU縺ｮ謇区惆 */
 .battle-opponent-hand {
   position: absolute;
   top: 4%;
@@ -803,7 +802,7 @@ button:focus-visible {
   object-fit: contain;
 }
 
-/* 陞ｻ�ｱ隴幢ｽｭ郢晢ｽｻ隰撰ｽｨ邵ｺ�ｦ隴幢ｽｭ */
+/* 螻ｱ譛ｭ繝ｻ謐ｨ縺ｦ譛ｭ */
 .battle-piles {
   position: absolute;
 
@@ -874,7 +873,7 @@ button:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
-/* 闕ｳ�ｭ陞滂ｽｮ邵ｺ�ｮ陜｣�ｴ */
+/* 荳ｭ螟ｮ縺ｮ蝣ｴ */
 .battle-fields {
   position: absolute;
   top: 26%;
@@ -920,7 +919,7 @@ button:focus-visible {
   box-shadow: inset 0 0 20px #0004;
 }
 
-/* 髢ｾ�ｪ陋ｻ�ｽ�ｽ隰�玄諠� */
+/* 閾ｪ蛻��謇区惆 */
 .battle-player-hand {
   position: absolute;
   right: 3%;
@@ -935,7 +934,7 @@ button:focus-visible {
   gap: 2%;
 }
 
-/* 隰�玄諠�1隴ｫ螢ｹ��ｸｺ�ｨ邵ｺ�ｮ隰ｫ蝣ｺ�ｽ諞ｺ�ｽ莨懈ｲｺ */
+/* 謇区惆1譫壹＃縺ｨ縺ｮ謫堺ｽ憺�伜沺 */
 .battle-hand-card {
   position: relative;
 
@@ -967,7 +966,7 @@ button:focus-visible {
   cursor: default;
 }
 
-/* 謇区惆縺ｮ諡｡螟ｧ陦ｨ遉ｺ */
+/* 手札の拡大表示 */
 .battle-hover-preview {
   position: fixed;
   z-index: 100;
@@ -991,7 +990,7 @@ button:focus-visible {
   display: none;
 }
 
-/* 郢ｧ�ｫ郢晢ｽｼ郢晁��｢�ｺ髫ｱ蜥ｲ蛻､鬮ｱ�｢ */
+/* 繧ｫ繝ｼ繝臥｢ｺ隱咲判髱｢ */
 .card-preview-dialog {
   width: min(380px, calc(100% - 24px));
 
@@ -1035,7 +1034,7 @@ button:focus-visible {
   min-height: 48px;
 }
 
-/* 陜｣�ｴ邵ｺ�ｫ郢ｧ�ｻ郢晢ｿｽ繝ｨ邵ｺ霈費ｽ檎ｸｺ貅倥″郢晢ｽｼ郢晢ｿｽ */
+/* 蝣ｴ縺ｫ繧ｻ繝�ヨ縺輔ｌ縺溘き繝ｼ繝� */
 .battle-field-slot.has-card {
   border-color: #dfbd77;
   background: #10192d;
@@ -1046,7 +1045,7 @@ button:focus-visible {
   outline-offset: 3px;
 }
 
-/* 郢ｧ�ｿ郢晢ｽｼ郢晢ｽｳ郢晢ｽｻ霑･�ｶ雎補握�｡�ｨ驕会ｽｺ */
+/* 繧ｿ繝ｼ繝ｳ繝ｻ迥ｶ豕∬｡ｨ遉ｺ */
 .battle-turn {
   position: absolute;
   top: 4%;
@@ -1058,7 +1057,7 @@ button:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
-/* 霑･�ｶ雎補握�ｪ�ｬ隴丞ｼｱ竊定ｬｫ蝣ｺ�ｽ諛奇ｿｽ郢ｧ�ｿ郢晢ｽｳ邵ｺ�ｮ陷茨ｽｱ鬨ｾ螢ｹ縺顔ｹ晢ｽｪ郢ｧ�｢ */
+/* 迥ｶ豕∬ｪｬ譏弱→謫堺ｽ懊�繧ｿ繝ｳ縺ｮ蜈ｱ騾壹お繝ｪ繧｢ */
 .battle-status {
   position: absolute;
 
@@ -1070,7 +1069,7 @@ button:focus-visible {
   overflow: auto;
 }
 
-/* 霑･�ｶ雎補握�ｪ�ｬ隴擾ｿｽ */
+/* 迥ｶ豕∬ｪｬ譏� */
 .battle-message {
   margin: 0 0 12px;
 
@@ -1082,7 +1081,7 @@ button:focus-visible {
   overflow-wrap: anywhere;
 }
 
-/* 郢晢ｽ｡郢昜ｹ斟礼ｹ晢ｽｼ郢晄㈱縺｡郢晢ｽｳ */
+/* 繝｡繝九Η繝ｼ繝懊ち繝ｳ */
 .battle-menu-trigger {
   position: absolute;
   top: 10%;
@@ -1095,7 +1094,7 @@ button:focus-visible {
   font-size: 1.5cqw;
 }
 
-/* 陝�ｽｾ隰鯉ｽｦ闕ｳ�ｭ邵ｺ�ｮ郢晢ｽ｡郢昜ｹ斟礼ｹ晢ｽｼ */
+/* 蟇ｾ謌ｦ荳ｭ縺ｮ繝｡繝九Η繝ｼ */
 .battle-menu-dialog {
   width: min(380px, calc(100% - 32px));
   max-height: calc(100vh - 32px);
@@ -1118,7 +1117,7 @@ button:focus-visible {
   width: 100%;
 }
 
-/* 陷茨ｽｬ鬮｢荵晢ｼ�ｹｧ蠕娯螺郢ｧ�ｫ郢晢ｽｼ郢晢ｿｽ */
+/* 蜈ｬ髢九＆繧後◆繧ｫ繝ｼ繝� */
 .battle-field-slot > .card {
   width: 100%;
 }
@@ -1127,7 +1126,7 @@ button:focus-visible {
   background: transparent;
 }
 
-/* 隰ｫ蝣ｺ�ｽ諛奇ｿｽ郢ｧ�ｿ郢晢ｽｳ邵ｺ�ｯ隴�ｿｽ�ｫ�ｽ邵ｺ�ｮ闕ｳ荵昶�闕ｳ�ｦ邵ｺ�ｹ郢ｧ�ｽ */
+/* 謫堺ｽ懊�繧ｿ繝ｳ縺ｯ譁�ｫ�縺ｮ荳九∈荳ｦ縺ｹ繧� */
 .battle-actions {
   width: 100%;
 
@@ -1144,7 +1143,7 @@ button:focus-visible {
   font-size: clamp(12px, 1.5cqw, 18px);
 }
 
-/* 隰撰ｽｨ邵ｺ�ｦ隴幢ｽｭ郢ｧ蜻域ｬｾ邵ｺ蟶呻ｽ狗ｸｺ阮吮�邵ｺ蠕鯉ｽ冗ｸｺ荵晢ｽ矩囎荵昶螺騾ｶ�ｮ */
+/* 謐ｨ縺ｦ譛ｭ繧呈款縺帙ｋ縺薙→縺後ｏ縺九ｋ隕九◆逶ｮ */
 .battle-discard-trigger {
   cursor: pointer;
   touch-action: manipulation;
@@ -1156,7 +1155,7 @@ button:focus-visible {
   border-radius: 6px;
 }
 
-/* 隰撰ｽｨ邵ｺ�ｦ隴幢ｽｭ闕ｳﾂ髫包ｽｧ */
+/* 謐ｨ縺ｦ譛ｭ荳隕ｧ */
 .discard-dialog {
   width: min(1000px, calc(100% - 32px));
 
@@ -1202,7 +1201,7 @@ button:focus-visible {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 
-  /* 繧ｫ繝ｼ繝峨�譫�繧�ヵ繧ｩ繝ｼ繧ｫ繧ｹ陦ｨ遉ｺ逕ｨ縺ｮ菴咏區 */
+  /* カードの枠やフォーカス表示用の余白 */
   padding: 4px;
 }
 
@@ -1240,7 +1239,7 @@ button:focus-visible {
   font-size: 14px;
 }
 
-/* 謐ｨ縺ｦ譛ｭ縺ｮ繧ｫ繝ｼ繝我ｸ隕ｧ縲ゅせ繧ｯ繝ｭ繝ｼ繝ｫ縺ｯ .discard-body 縺ｧ陦後≧ */
+/* 捨て札のカード一覧。スクロールは .discard-body で行う */
 .discard-card-grid {
   width: 100%;
   margin: 0;
@@ -1268,7 +1267,7 @@ button:focus-visible {
   min-height: 48px;
 }
 
-/* 騾包ｽｻ鬮ｱ�｢陝ｷ�ｽ�ｽ陷茨ｽ･陷牙ｸｶ蟀ｿ雎戊ｼ披�陷ｷ蛹ｻ�冗ｸｺ蟶吮螺髫ｱ�ｿ隰ｨ�ｴ */
+/* 逕ｻ髱｢蟷��蜈･蜉帶婿豕輔↓蜷医ｏ縺帙◆隱ｿ謨ｴ */
 
 @media (max-width: 800px) {
   .card-list {
@@ -1337,14 +1336,14 @@ button:focus-visible {
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
-  /* 郢晢ｽ｡郢ｧ�､郢晢ｽｳ郢晢ｽ｡郢昜ｹ斟礼ｹ晢ｽｼ邵ｺ�ｮ陞滄摩�ｽ */
+  /* 繝｡繧､繝ｳ繝｡繝九Η繝ｼ縺ｮ螟門� */
   .main-menu-screen {
     min-height: 100vh;
     min-height: 100svh;
     padding: 12px;
   }
 
-  /* 郢晢ｽ｡郢昜ｹ斟礼ｹ晢ｽｼ郢ｧ雋橸ｽｷ�ｦ陷ｿ�ｳ2陋ｻ蜉ｱ竊鍋ｸｺ蜷ｶ�� */
+  /* 繝｡繝九Η繝ｼ繧貞ｷｦ蜿ｳ2蛻励↓縺吶ｋ */
   .main-menu-panel {
     width: min(620px, 100%);
     padding: 12px 16px;
@@ -1361,21 +1360,21 @@ button:focus-visible {
     line-height: 1.3;
   }
 
-  /* 陝ｾ�ｦ陋幢ｽｴ�ｽ螢ｹ縺皮ｹ晢ｽｼ郢晢ｿｽ郢ｧ�ｹ郢ｧ�ｿ郢晢ｽｼ郢晏現竊醍ｸｺ�ｩ */
+  /* 蟾ｦ蛛ｴ�壹ご繝ｼ繝�繧ｹ繧ｿ繝ｼ繝医↑縺ｩ */
   .main-menu-panel > .menu-stack {
     grid-column: 1;
     grid-row: 2 / 4;
     gap: 8px;
   }
 
-  /* 陷ｿ�ｳ陋幢ｽｴ�ｽ螢ｽ邯ｾ郢ｧ荵晢ｿｽ郢ｧ�ｿ郢晢ｽｳ邵ｲ竏壺穐邵ｺ貅假ｿｽBGM郢晄㈱縺｡郢晢ｽｳ */
+  /* 蜿ｳ蛛ｴ�壽綾繧九�繧ｿ繝ｳ縲√∪縺溘�BGM繝懊ち繝ｳ */
   .main-menu-panel > .menu-button {
     grid-column: 2;
     grid-row: 2;
     width: 100%;
   }
 
-  /* 陷ｿ�ｳ陋幢ｽｴ�ｽ螟奇ｽｨﾂ髫ｱ讒ｫ�ｽ郢ｧ鬆大ｴ帷ｸｺ�ｽ */
+  /* 蜿ｳ蛛ｴ�夊ｨ隱槫�繧頑崛縺� */
   .main-menu-panel > .language-controls {
     grid-column: 2;
     grid-row: 3;
@@ -1397,14 +1396,14 @@ button:focus-visible {
     font-size: 14px;
   }
 
-  /* 陝�ｽｾ隰鯉ｽｦ闕ｳ�ｭ邵ｺ�ｮ郢ｧ�ｲ郢晢ｽｼ郢晢ｿｽ郢晢ｽ｡郢昜ｹ斟礼ｹ晢ｽｼ */
+  /* 蟇ｾ謌ｦ荳ｭ縺ｮ繧ｲ繝ｼ繝�繝｡繝九Η繝ｼ */
   .battle-menu-dialog {
     width: min(620px, calc(100% - 24px));
     max-height: calc(100vh - 24px);
     max-height: calc(100svh - 24px);
   }
 
-  /* 郢ｧ�ｫ郢晢ｽｼ郢晁��｢�ｺ髫ｱ蜥ｲ蛻､鬮ｱ�｢ */
+  /* 繧ｫ繝ｼ繝臥｢ｺ隱咲判髱｢ */
   .card-preview-dialog {
     width: min(620px, calc(100% - 24px));
     max-height: calc(100vh - 24px);
@@ -1427,7 +1426,7 @@ button:focus-visible {
     line-height: 1.3;
   }
 
-  /* 鬯ｮ蛟･��ｸｺ�ｫ陷ｷ蛹ｻ�冗ｸｺ蟶吮ｻ郢ｧ�ｫ郢晢ｽｼ郢晏ｳｨ�帝し�ｮ郢ｧ竏夲ｽ� */
+  /* 鬮倥＆縺ｫ蜷医ｏ縺帙※繧ｫ繝ｼ繝峨ｒ邵ｮ繧√ｋ */
   .card-preview-panel > .card {
     grid-column: 1;
     grid-row: 2;
@@ -1436,7 +1435,7 @@ button:focus-visible {
     max-width: 100%;
   }
 
-  /* 郢ｧ�ｫ郢晢ｽｼ郢晏ｳｨ�ｽ陷ｿ�ｳ邵ｺ�ｫ郢ｧ�ｻ郢晢ｿｽ繝ｨ郢晢ｽｻ隰鯉ｽｻ郢ｧ荵晢ｿｽ郢ｧ�ｿ郢晢ｽｳ */
+  /* 繧ｫ繝ｼ繝峨�蜿ｳ縺ｫ繧ｻ繝�ヨ繝ｻ謌ｻ繧九�繧ｿ繝ｳ */
   .card-preview-panel > .menu-stack {
     grid-column: 2;
     grid-row: 2;
@@ -1445,7 +1444,7 @@ button:focus-visible {
     gap: 12px;
   }
 
-  /* 陝�ｽｾ隰鯉ｽｦ闕ｳ�ｭ邵ｺ�ｮ郢晢ｽ｡郢昜ｹ斟礼ｹ晢ｽｼ郢ｧ雋橸ｽｱ�ｱ隴幢ｽｭ郢ｧ蛹ｻ�願叉鄙ｫ竏� */
+  /* 蟇ｾ謌ｦ荳ｭ縺ｮ繝｡繝九Η繝ｼ繧貞ｱｱ譛ｭ繧医ｊ荳翫∈ */
   .battle-menu-trigger {
     top: 4%;
     right: 3%;
@@ -1456,14 +1455,14 @@ button:focus-visible {
     font-size: 14px;
   }
 
-  /* 郢ｧ�ｿ郢晢ｽｼ郢晢ｽｳ髯ｦ�ｨ驕会ｽｺ邵ｺ�ｯ郢晢ｽ｡郢昜ｹ斟礼ｹ晢ｽｼ郢晄㈱縺｡郢晢ｽｳ邵ｺ�ｮ陝ｾ�ｦ邵ｺ�ｸ */
+  /* 繧ｿ繝ｼ繝ｳ陦ｨ遉ｺ縺ｯ繝｡繝九Η繝ｼ繝懊ち繝ｳ縺ｮ蟾ｦ縺ｸ */
   .battle-turn {
     top: 5%;
     right: 23%;
   }
 
   @media (pointer: coarse) and (max-width: 1000px) {
-      /* 繧ｭ繝｣繝ｩ驕ｸ謚橸ｼ夊ｦ句�縺励→險隱槭�繧ｿ繝ｳ繧呈ｨｪ荳ｦ縺ｳ縺ｫ縺吶ｋ */
+      /* キャラ選択：見出しと言語ボタンを横並びにする */
     .app-character-select .content-screen {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       grid-template-rows: auto auto minmax(0, 1fr) auto;
@@ -1506,7 +1505,7 @@ button:focus-visible {
     gap: 8px;
   }
 
-  /* 蜷�く繝｣繝ｩ縺ｮ譫�蜀�〒縲∝錐蜑阪ｒ谿九＠縺ｦ逕ｻ蜒上�鬮倥＆繧定ｪｿ謨ｴ */
+  /* 各キャラの枠内で、名前を残して画像の高さを調整 */
   .app-character-select .character-choice {
     height: 100%;
     min-height: 0;
@@ -1548,7 +1547,7 @@ button:focus-visible {
     font-size: 15px;
   }
 
-  /* 謐ｨ縺ｦ譛ｭ�夊ｦ句�縺励↑縺ｩ繧貞ｰ上＆縺上＠縲√き繝ｼ繝臥畑縺ｮ鬮倥＆繧堤｢ｺ菫� */
+  /* 捨て札：見出しなどを小さくし、カード用の高さを確保 */
   .discard-panel {
     padding: 10px;
     gap: 8px;
@@ -1568,7 +1567,7 @@ button:focus-visible {
     display: none;
   }
 
-  /* 讓ｪ蜷代″縺ｧ縺ｯ縲√き繝ｼ繝牙�菴薙ｒ遒ｺ隱阪＠繧�☆縺�し繧､繧ｺ縺ｫ縺吶ｋ */
+  /* 横向きでは、カード全体を確認しやすいサイズにする */
   .discard-card-item > .card {
     width: min(180px, max(48px, calc((100svh - 172px) * 0.75)));
     max-width: 100%;
@@ -1592,7 +1591,7 @@ button:focus-visible {
   }
 }
 
-/* 繧ｹ繝槭�邵ｦ蜷代″譎ゅ�譯亥� */
+/* スマホ縦向き時の案内 */
 .rotate-guide {
   position: fixed;
   inset: 0;
@@ -1642,7 +1641,7 @@ button:focus-visible {
   background: #0b1022;
 }
 
-/* 髟ｷ謚ｼ縺玲凾縺ｮ譁�ｭ鈴∈謚槭�逕ｻ蜒上Γ繝九Η繝ｼ繧呈椛縺医ｋ */
+/* 長押し時の文字選択・画像メニューを抑える */
 .battle-hand-card {
   -webkit-user-select: none;
   user-select: none;
@@ -1658,14 +1657,14 @@ button:focus-visible {
   outline-offset: 4px;
 }
 
-/* 蜈ｬ髢区ｸ医∩縺ｮ蝣ｴ縺ｮ繧ｫ繝ｼ繝会ｼ壽桃菴懊�螟門�縺ｮ譫�縺ｧ蜿励￠蜿悶ｋ */
+/* 公開済みの場のカード：操作は外側の枠で受け取る */
 .battle-field-slot.is-revealed {
   cursor: zoom-in;
   touch-action: manipulation;
   pointer-events: auto;
 }
 
-/* 譫�縺ｨ縺昴�荳ｭ霄ｫ縺ｧ縲ヾafari縺ｮ髟ｷ謚ｼ縺励Γ繝九Η繝ｼ繝ｻ驕ｸ謚槭ｒ謚代∴繧� */
+/* 枠とその中身で、Safariの長押しメニュー・選択を抑える */
 .battle-field-slot.is-revealed,
 .battle-field-slot.is-revealed * {
   -webkit-touch-callout: none;
@@ -1673,7 +1672,7 @@ button:focus-visible {
   user-select: none;
 }
 
-/* 逕ｻ蜒上ｄ譁�ｭ励↓隗ｦ繧後※繧ゅ∝､門�縺ｮ譫�縺ｧ髟ｷ謚ｼ縺励ｒ蛻､螳壹☆繧� */
+/* 画像や文字に触れても、外側の枠で長押しを判定する */
 .battle-field-slot.is-revealed * {
   pointer-events: none;
 }
@@ -1687,7 +1686,7 @@ button:focus-visible {
   outline-offset: 4px;
 }
 
-/* 蟇ｾ謌ｦ荳ｭ縺ｮ繝�ャ繧ｭ讒区�荳隕ｧ */
+/* 対戦中のデッキ構成一覧 */
 .deck-composition-panel {
   width: min(640px, 100%);
   max-height: calc(100vh - 64px);
@@ -1768,7 +1767,7 @@ button:focus-visible {
   min-height: 44px;
 }
 
-/* 繧ｹ繝槭�讓ｪ蜷代″縺ｪ縺ｩ縲�ｫ倥＆縺悟ｰ代↑縺�判髱｢ */
+/* スマホ横向きなど、高さが少ない画面 */
 @media (max-height: 500px) and (orientation: landscape) {
   .deck-composition-panel {
     padding: 8px;
