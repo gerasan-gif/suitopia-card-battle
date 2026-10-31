@@ -1,6 +1,7 @@
 // 種類ごとの共通情報
 const CARD_TYPES = {
   attack: {
+    frame: "images/19_fuka_frame.webp",
     icon: "images/03_icon_attack.webp",
 
     lang: {
@@ -22,6 +23,7 @@ const CARD_TYPES = {
   },
 
   defence: {
+    frame: "images/29_anna_frame.webp",
     icon: "images/04_icon_defence.webp",
 
     lang: {
@@ -43,6 +45,7 @@ const CARD_TYPES = {
   },
 
   feint: {
+    frame: "images/08_feint_frame.webp",
     icon: "images/05_icon_feint.webp",
 
     lang: {
@@ -71,8 +74,8 @@ const CARDS = [
   {
     id: "fuka_attack",
     type: "attack",
+    frame: CARD_TYPES.attack.frame,
     image: "images/11_fuka_attack.webp",
-    frame: "images/19_fuka_frame.webp",
     suit: "images/18_fuka_suit.webp",
 
     lang: {
@@ -94,8 +97,8 @@ const CARDS = [
   {
     id: "fuka_defence",
     type: "defence",
+    frame: CARD_TYPES.defence.frame,
     image: "images/12_fuka_defence.webp",
-    frame: "images/19_fuka_frame.webp",
     suit: "images/18_fuka_suit.webp",
 
     lang: {
@@ -117,8 +120,8 @@ const CARDS = [
   {
     id: "fuka_feint",
     type: "feint",
+    frame: CARD_TYPES.feint.frame,
     image: "images/13_fuka_feint.webp",
-    frame: "images/19_fuka_frame.webp",
     suit: "images/18_fuka_suit.webp",
 
     lang: {
@@ -141,8 +144,8 @@ const CARDS = [
   {
     id: "anna_attack",
     type: "attack",
+    frame: CARD_TYPES.attack.frame,
     image: "images/21_anna_attack.webp",
-    frame: "images/29_anna_frame.webp",
     suit: "images/28_anna_suit.webp",
 
     lang: {
@@ -164,8 +167,8 @@ const CARDS = [
   {
     id: "anna_defence",
     type: "defence",
+    frame: CARD_TYPES.defence.frame,
     image: "images/22_anna_defence.webp",
-    frame: "images/29_anna_frame.webp",
     suit: "images/28_anna_suit.webp",
 
     lang: {
@@ -187,8 +190,8 @@ const CARDS = [
   {
     id: "anna_feint",
     type: "feint",
+    frame: CARD_TYPES.feint.frame,
     image: "images/23_anna_feint.webp",
-    frame: "images/29_anna_frame.webp",
     suit: "images/28_anna_suit.webp",
 
     lang: {
@@ -211,8 +214,8 @@ const CARDS = [
   {
     id: "shizuku_attack",
     type: "attack",
+    frame: CARD_TYPES.attack.frame,
     image: "images/31_shizuku_attack.webp",
-    frame: "images/39_shizuku_frame.webp",
     suit: "images/38_shizuku_suit.webp",
 
     lang: {
@@ -234,8 +237,8 @@ const CARDS = [
   {
     id: "shizuku_defence",
     type: "defence",
+    frame: CARD_TYPES.defence.frame,
     image: "images/32_shizuku_defence.webp",
-    frame: "images/39_shizuku_frame.webp",
     suit: "images/38_shizuku_suit.webp",
 
     lang: {
@@ -257,8 +260,8 @@ const CARDS = [
   {
     id: "shizuku_feint",
     type: "feint",
+    frame: CARD_TYPES.feint.frame,
     image: "images/33_shizuku_feint.webp",
-    frame: "images/39_shizuku_frame.webp",
     suit: "images/38_shizuku_suit.webp",
 
     lang: {
@@ -281,8 +284,8 @@ const CARDS = [
   {
     id: "chihiro_attack",
     type: "attack",
+    frame: CARD_TYPES.attack.frame,
     image: "images/41_chihiro_attack.webp",
-    frame: "images/49_chihiro_frame.webp",
     suit: "images/48_chihiro_suit.webp",
 
     lang: {
@@ -304,8 +307,8 @@ const CARDS = [
   {
     id: "chihiro_defence",
     type: "defence",
+    frame: CARD_TYPES.defence.frame,
     image: "images/42_chihiro_defence.webp",
-    frame: "images/49_chihiro_frame.webp",
     suit: "images/48_chihiro_suit.webp",
 
     lang: {
@@ -327,8 +330,8 @@ const CARDS = [
   {
     id: "chihiro_feint",
     type: "feint",
+    frame: CARD_TYPES.feint.frame,
     image: "images/43_chihiro_feint.webp",
-    frame: "images/49_chihiro_frame.webp",
     suit: "images/48_chihiro_suit.webp",
 
     lang: {

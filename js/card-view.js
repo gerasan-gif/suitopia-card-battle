@@ -35,8 +35,21 @@ function createCard(cardData, language = "ja") {
   // カードの枠
   const frame = createCardImage(
     "card-frame",
-    cardData.frame
+    typeData.frame
   );
+
+  // 紫枠の白い中央を、既存フレームと同じ形で抜く。
+  // 元画像は変更せず、イラストと枠の重なり方を維持する。
+  if (cardData.type === "feint") {
+    const frameMask = 'url("images/19_fuka_frame.webp")';
+    frame.style.maskImage = frameMask;
+    frame.style.webkitMaskImage = frameMask;
+    frame.style.maskMode = "alpha";
+    frame.style.maskSize = "100% 100%";
+    frame.style.webkitMaskSize = "100% 100%";
+    frame.style.maskRepeat = "no-repeat";
+    frame.style.webkitMaskRepeat = "no-repeat";
+  }
 
   // 左上の種類マーク
   const typeIcon = createCardImage(
