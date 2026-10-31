@@ -23,6 +23,7 @@ function createCard(cardData, language = "ja") {
   const card = document.createElement("article");
   card.className = "card";
   card.dataset.cardId = cardData.id;
+  card.dataset.type = cardData.type;
   card.lang = language;
 
   // キャラクターのイラスト
@@ -47,7 +48,9 @@ function createCard(cardData, language = "ja") {
   // 上部の種類名
   const header = document.createElement("header");
   header.className = "card-header";
-  header.textContent = typeText.label;
+  const typeLabel = document.createElement("span");
+  typeLabel.className = "card-type-label";
+  typeLabel.textContent = typeText.label;
 
   // 右上のスートマーク
   const suitIcon = createCardImage(
@@ -82,7 +85,8 @@ function createCard(cardData, language = "ja") {
   });
 
   text.append(name, character, rule);
-  card.append(art, frame, typeIcon, header, suitIcon, text);
+  header.append(typeIcon, typeLabel, suitIcon);
+  card.append(art, frame, header, text);
 
   return card;
 }
