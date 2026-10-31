@@ -38,7 +38,7 @@ const SCREEN_TEXT = {
       },
       {
         title: "攻撃・防御・フェイント",
-        body: "攻撃はフェイントに勝ち、防御は攻撃にカウンターし、フェイントは防御に勝ちます。勝った側が相手に1ダメージを与えます。"
+        body: "カードは3種類あり、どのキャラクターでも攻撃は赤枠、防御は青枠、フェイントは紫枠です。\n攻撃はフェイントに勝ち、防御は攻撃にカウンターし、フェイントは防御に勝ちます。勝った側が相手に1ダメージを与えます。"
       },
       {
         title: "同じ種類を出した場合",
@@ -81,7 +81,7 @@ const SCREEN_TEXT = {
       },
       {
         title: "Attack, Defence and Feint",
-        body: "Attack beats Feint. Defence counters Attack. Feint beats Defence. The winner deals 1 damage to the opponent."
+        body: "There are three card types. For every character, Attack cards have red frames, Defence cards have blue frames, and Feint cards have purple frames.\nAttack beats Feint. Defence counters Attack. Feint beats Defence. The winner deals 1 damage to the opponent."
       },
       {
         title: "Matching Types",
