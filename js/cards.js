@@ -1,7 +1,7 @@
 // 種類ごとの共通情報
 const CARD_TYPES = {
   attack: {
-    frame: "images/19_fuka_frame.webp",
+    frame: "images/06_attack_frame.webp",
     icon: "images/03_icon_attack.webp",
 
     lang: {
@@ -23,7 +23,7 @@ const CARD_TYPES = {
   },
 
   defence: {
-    frame: "images/29_anna_frame.webp",
+    frame: "images/07_defence_frame.webp",
     icon: "images/04_icon_defence.webp",
 
     lang: {

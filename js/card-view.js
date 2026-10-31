@@ -41,7 +41,7 @@ function createCard(cardData, language = "ja") {
   // 紫枠の白い中央を、既存フレームと同じ形で抜く。
   // 元画像は変更せず、イラストと枠の重なり方を維持する。
   if (cardData.type === "feint") {
-    const frameMask = 'url("images/19_fuka_frame.webp")';
+    const frameMask = 'url("images/06_attack_frame.webp")';
     frame.style.maskImage = frameMask;
     frame.style.webkitMaskImage = frameMask;
     frame.style.maskMode = "alpha";
