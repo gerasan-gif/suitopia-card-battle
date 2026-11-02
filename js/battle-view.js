@@ -892,7 +892,7 @@ function scheduleBattleRoundResult() {
     ) return;
 
     showBattleRoundResult();
-  }, 2000);
+  }, 1000);
 }
 
 
