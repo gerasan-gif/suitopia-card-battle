@@ -1871,8 +1871,18 @@ button:focus-visible {
   color: #ffb5bb;
 }
 
-.battle-round-result-panel > .menu-button {
-  width: min(360px, 100%);
+.battle-round-result-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.battle-round-result-actions > .menu-button {
+  flex: 1 1 200px;
+  max-width: 360px;
+  width: 100%;
   min-height: 44px;
   margin: 0;
 }
@@ -1897,7 +1907,7 @@ button:focus-visible {
     font-size: 13px;
   }
 
-  .battle-round-result-panel > .menu-button {
+  .battle-round-result-actions > .menu-button {
     padding: 6px 12px;
     font-size: 14px;
   }

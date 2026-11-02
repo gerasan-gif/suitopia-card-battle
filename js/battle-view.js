@@ -536,7 +536,12 @@ function createBattleScreen() {
   message.className = "battle-message";
   message.setAttribute("role", "status");
   
-  message.textContent = getBattleMessage();
+  // 各バトルの結果はポップアップに集約する。山札切れの終了案内は残す。
+  const roundResultOnBoard = battle.lastResult &&
+    (battle.phase === "resolved" ||
+      (battle.phase === "finished" && battle.endReason !== "deck"));
+  message.hidden = Boolean(roundResultOnBoard);
+  message.textContent = roundResultOnBoard ? "" : getBattleMessage();
 
   // 状況説明と操作ボタンを縦にまとめる
   const status = document.createElement("div");
@@ -820,6 +825,7 @@ function showBattleRoundResult() {
   const text = BATTLE_TEXT[language];
   const result = battle?.lastResult;
   if (!result || !["resolved", "finished"].includes(battle.phase)) return;
+  if (app.querySelector(".battle-round-result-dialog[open]")) return;
 
   const japanese = language === "ja";
   const dialog = document.createElement("dialog");
@@ -861,7 +867,18 @@ function showBattleRoundResult() {
     () => dialog.close()
   );
   closeButton.autofocus = true;
-  panel.append(heading, matchup, message, life, closeButton);
+  const buttons = document.createElement("div");
+  buttons.className = "battle-round-result-actions";
+  buttons.append(closeButton);
+  if (battle.phase === "resolved") {
+    const nextButton = createMenuButton(text.nextTurn, () => {
+      if (gameState.battle !== battle || battle.phase !== "resolved") return;
+      dialog.close();
+      advanceBattleFromResult();
+    }, true);
+    buttons.append(nextButton);
+  }
+  panel.append(heading, matchup, message, life, buttons);
   dialog.append(panel);
   dialog.addEventListener("close", () => {
     dialog.remove();
@@ -869,6 +886,18 @@ function showBattleRoundResult() {
   }, { once: true });
   app.append(dialog);
   dialog.showModal();
+}
+
+
+// 次ターンへの移行は結果ポップアップから行う。
+function advanceBattleFromResult() {
+  if (!nextBattleTurn()) return;
+  battleUI.previewIndex = null;
+  renderScreen();
+  const selector = gameState.battle.phase === "finished"
+    ? ".battle-actions .menu-button"
+    : ".battle-hand-card[role='button']";
+  app.querySelector(selector)?.focus();
 }
 
 
@@ -892,7 +921,7 @@ function scheduleBattleRoundResult() {
     ) return;
 
     showBattleRoundResult();
-  }, 1000);
+  }, 2000);
 }
 
 
@@ -936,33 +965,14 @@ function createBattleActions() {
     );
   }
 
-  // 判定後：次のターンへ進む
-  if (battle.phase === "resolved") {
-    actions.append(
-      createMenuButton(
-        text.nextTurn,
-        () => {
-          if (!nextBattleTurn()) {
-            return;
-          }
-
-          battleUI.previewIndex = null;
-
-          renderScreen();
-
-          if (gameState.battle.phase === "finished") {
-            app.querySelector(
-              ".battle-actions .menu-button"
-            )?.focus();
-          } else {
-            app.querySelector(
-              ".battle-hand-card[role='button']"
-            )?.focus();
-          }
-        },
-        true
-      )
-    );
+  // 盤面確認後は、結果ポップアップへ戻る。
+  if (battle.phase === "resolved" ||
+      (battle.phase === "finished" && battle.lastResult && battle.endReason !== "deck")) {
+    actions.append(createMenuButton(
+      gameState.language === "ja" ? "バトル結果へ" : "View Round Result",
+      () => showBattleRoundResult(),
+      true
+    ));
   }
 
   // 対戦終了後
