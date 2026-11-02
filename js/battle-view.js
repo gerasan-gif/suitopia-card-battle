@@ -872,6 +872,30 @@ function showBattleRoundResult() {
 }
 
 
+// ダメージ処理済みの盤面を2秒見せてから結果を表示する。
+function scheduleBattleRoundResult() {
+  const battle = gameState.battle;
+  const result = battle?.lastResult;
+  const screen = app.querySelector(".battle-screen");
+  if (!result || !screen) return;
+
+  // 待機中の次ターン操作やメニュー表示を防ぐ。盤面はそのまま見せる。
+  screen.inert = true;
+  setTimeout(() => {
+    screen.inert = false;
+    // 画面や対戦が切り替わっていたら古い結果を表示しない。
+    if (
+      !screen.isConnected ||
+      gameState.screen !== "battle" ||
+      gameState.battle !== battle ||
+      battle.lastResult !== result
+    ) return;
+
+    showBattleRoundResult();
+  }, 2000);
+}
+
+
 // 進行状況に合わせた操作ボタン
 function createBattleActions() {
   const text = BATTLE_TEXT[gameState.language];
@@ -905,7 +929,7 @@ function createBattleActions() {
 
           renderScreen();
 
-          showBattleRoundResult();
+          scheduleBattleRoundResult();
         },
         true
       )
