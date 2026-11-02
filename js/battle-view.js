@@ -813,6 +813,65 @@ function getBattleMessage() {
 }
 
 
+// カード公開直後の判定結果。再描画やメニュー開閉では再表示しない。
+function showBattleRoundResult() {
+  const battle = gameState.battle;
+  const language = gameState.language;
+  const text = BATTLE_TEXT[language];
+  const result = battle?.lastResult;
+  if (!result || !["resolved", "finished"].includes(battle.phase)) return;
+
+  const japanese = language === "ja";
+  const dialog = document.createElement("dialog");
+  dialog.className = "battle-round-result-dialog";
+  dialog.lang = language;
+  dialog.setAttribute("aria-labelledby", "battle-round-result-heading");
+  dialog.setAttribute("aria-describedby", "battle-round-result-message");
+
+  const panel = document.createElement("section");
+  panel.className = "battle-round-result-panel";
+  panel.dataset.outcome = result.playerDamage && result.cpuDamage
+    ? "draw" : result.cpuDamage ? "win" : result.playerDamage ? "lose" : "draw";
+
+  const heading = document.createElement("h2");
+  heading.id = "battle-round-result-heading";
+  heading.textContent = japanese ? "バトル結果" : "Round Result";
+
+  const matchup = document.createElement("p");
+  matchup.className = "battle-round-result-matchup";
+  const playerType = CARD_TYPES[battle.player.field.type].lang[language].label;
+  const cpuType = CARD_TYPES[battle.cpu.field.type].lang[language].label;
+  matchup.textContent = japanese
+    ? `あなた：${playerType} ／ 相手：${cpuType}`
+    : `You: ${playerType} / Opponent: ${cpuType}`;
+
+  const message = document.createElement("p");
+  message.id = "battle-round-result-message";
+  message.className = "battle-round-result-message";
+  message.textContent = getBattleMessage();
+
+  const life = document.createElement("p");
+  life.className = "battle-round-result-life";
+  life.textContent = japanese
+    ? `残りライフ　あなた：${battle.player.life} ／ 相手：${battle.cpu.life}`
+    : `Life remaining — You: ${battle.player.life} / Opponent: ${battle.cpu.life}`;
+
+  const closeButton = createMenuButton(
+    japanese ? "盤面を確認" : "View Board",
+    () => dialog.close()
+  );
+  closeButton.autofocus = true;
+  panel.append(heading, matchup, message, life, closeButton);
+  dialog.append(panel);
+  dialog.addEventListener("close", () => {
+    dialog.remove();
+    app.querySelector(".battle-actions .menu-button")?.focus();
+  }, { once: true });
+  app.append(dialog);
+  dialog.showModal();
+}
+
+
 // 進行状況に合わせた操作ボタン
 function createBattleActions() {
   const text = BATTLE_TEXT[gameState.language];
@@ -846,9 +905,7 @@ function createBattleActions() {
 
           renderScreen();
 
-          app.querySelector(
-            ".battle-field-player .battle-field-slot"
-          )?.focus();
+          showBattleRoundResult();
         },
         true
       )

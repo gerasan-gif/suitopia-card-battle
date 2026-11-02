@@ -1814,3 +1814,91 @@ button:focus-visible {
     font-size: 14px;
   }
 }
+
+/* カード公開直後のバトル結果 */
+.battle-round-result-dialog {
+  width: min(720px, calc(100% - 24px));
+  max-width: none;
+  max-height: calc(100svh - 24px);
+  box-sizing: border-box;
+  padding: 0;
+  overflow: auto;
+  border: 2px solid #c7a566;
+  border-radius: 20px;
+  color: #fff4d6;
+  background: #0c1428;
+}
+
+.battle-round-result-dialog::backdrop {
+  background: #030817b3;
+}
+
+.battle-round-result-panel {
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  text-align: center;
+}
+
+.battle-round-result-panel > h2,
+.battle-round-result-panel > p {
+  margin: 0;
+}
+
+.battle-round-result-panel > h2 {
+  font-size: clamp(22px, 3vw, 30px);
+}
+
+.battle-round-result-matchup,
+.battle-round-result-life {
+  font-size: clamp(14px, 2vw, 20px);
+  line-height: 1.5;
+}
+
+.battle-round-result-message {
+  font-size: clamp(24px, 3.5vw, 36px);
+  font-weight: bold;
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.battle-round-result-panel[data-outcome="win"] .battle-round-result-message {
+  color: #f4dc94;
+}
+
+.battle-round-result-panel[data-outcome="lose"] .battle-round-result-message {
+  color: #ffb5bb;
+}
+
+.battle-round-result-panel > .menu-button {
+  width: min(360px, 100%);
+  min-height: 44px;
+  margin: 0;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .battle-round-result-panel {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .battle-round-result-panel > h2 {
+    font-size: 20px;
+  }
+
+  .battle-round-result-message {
+    font-size: clamp(20px, 3vw, 28px);
+    line-height: 1.3;
+  }
+
+  .battle-round-result-matchup,
+  .battle-round-result-life {
+    font-size: 13px;
+  }
+
+  .battle-round-result-panel > .menu-button {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
