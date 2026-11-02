@@ -28,6 +28,8 @@ const BATTLE_TEXT = {
     faceDown: "セットされた裏向きのカード",
     bothSet: "両者がカードをセットしました",
     reveal: "カードを公開",
+    cardsRevealed: "カードを公開しました",
+    gameFinished: "対戦が終了しました",
     bothAttack: "攻撃同士！ お互いに1ダメージ",
     noDamage: "同じ種類のため、ダメージなし",
     playerRoundWin: "あなたの勝ち！ 相手に1ダメージ",
@@ -69,6 +71,8 @@ const BATTLE_TEXT = {
     faceDown: "A card set face down",
     bothSet: "Both cards have been set",
     reveal: "Reveal Cards",
+    cardsRevealed: "Cards have been revealed.",
+    gameFinished: "The game has ended.",
     bothAttack: "Both used Attack!\nEach takes 1 damage",
     noDamage: "Matching types. No damage",
     playerRoundWin: "You win this round!\nOpponent takes 1 damage",
@@ -536,10 +540,14 @@ function createBattleScreen() {
   message.className = "battle-message";
   message.setAttribute("role", "status");
   
-  // バトル結果・最終結果はポップアップに集約する。
-  const roundResultOnBoard = battle.phase === "resolved" || battle.phase === "finished";
-  message.hidden = Boolean(roundResultOnBoard);
-  message.textContent = roundResultOnBoard ? "" : getBattleMessage();
+  // 詳しい結果はポップアップに表示し、盤面には1行の案内を残す。
+  if (battle.phase === "resolved" || battle.phase === "finished") {
+    message.textContent = battle.endReason === "deck"
+      ? text.gameFinished
+      : text.cardsRevealed;
+  } else {
+    message.textContent = getBattleMessage();
+  }
 
   // 状況説明と操作ボタンを縦にまとめる
   const status = document.createElement("div");
