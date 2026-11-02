@@ -69,10 +69,10 @@ const BATTLE_TEXT = {
     faceDown: "A card set face down",
     bothSet: "Both cards have been set",
     reveal: "Reveal Cards",
-    bothAttack: "Both used Attack! Each takes 1 damage",
+    bothAttack: "Both used Attack!\nEach takes 1 damage",
     noDamage: "Matching types. No damage",
-    playerRoundWin: "You win this round! Opponent takes 1 damage",
-    cpuRoundWin: "Opponent wins this round! You take 1 damage",
+    playerRoundWin: "You win this round!\nOpponent takes 1 damage",
+    cpuRoundWin: "Opponent wins this round!\nYou take 1 damage",
     nextTurn: "Next Turn",
     deckExhausted: "Deck empty. Comparing life totals.",
     victory: "You win the game!",
@@ -536,10 +536,8 @@ function createBattleScreen() {
   message.className = "battle-message";
   message.setAttribute("role", "status");
   
-  // 各バトルの結果はポップアップに集約する。山札切れの終了案内は残す。
-  const roundResultOnBoard = battle.lastResult &&
-    (battle.phase === "resolved" ||
-      (battle.phase === "finished" && battle.endReason !== "deck"));
+  // バトル結果・最終結果はポップアップに集約する。
+  const roundResultOnBoard = battle.phase === "resolved" || battle.phase === "finished";
   message.hidden = Boolean(roundResultOnBoard);
   message.textContent = roundResultOnBoard ? "" : getBattleMessage();
 
@@ -824,7 +822,8 @@ function showBattleRoundResult() {
   const language = gameState.language;
   const text = BATTLE_TEXT[language];
   const result = battle?.lastResult;
-  if (!result || !["resolved", "finished"].includes(battle.phase)) return;
+  if (!battle || !["resolved", "finished"].includes(battle.phase)) return;
+  if (battle.phase === "resolved" && !result) return;
   if (app.querySelector(".battle-round-result-dialog[open]")) return;
 
   const japanese = language === "ja";
@@ -836,25 +835,40 @@ function showBattleRoundResult() {
 
   const panel = document.createElement("section");
   panel.className = "battle-round-result-panel";
-  panel.dataset.outcome = result.playerDamage && result.cpuDamage
-    ? "draw" : result.cpuDamage ? "win" : result.playerDamage ? "lose" : "draw";
+  panel.dataset.outcome = battle.phase === "finished"
+    ? (battle.outcome === "player" ? "win" : battle.outcome === "cpu" ? "lose" : "draw")
+    : result.playerDamage && result.cpuDamage
+      ? "draw" : result.cpuDamage ? "win" : result.playerDamage ? "lose" : "draw";
 
   const heading = document.createElement("h2");
   heading.id = "battle-round-result-heading";
-  heading.textContent = japanese ? "バトル結果" : "Round Result";
+  heading.textContent = battle.phase === "finished"
+    ? (japanese ? "対戦結果" : "Game Result")
+    : (japanese ? "バトル結果" : "Round Result");
 
   const matchup = document.createElement("p");
   matchup.className = "battle-round-result-matchup";
+  if (battle.player.field && battle.cpu.field) {
   const playerType = CARD_TYPES[battle.player.field.type].lang[language].label;
   const cpuType = CARD_TYPES[battle.cpu.field.type].lang[language].label;
   matchup.textContent = japanese
     ? `あなた：${playerType} ／ 相手：${cpuType}`
     : `You: ${playerType} / Opponent: ${cpuType}`;
+  } else {
+    matchup.hidden = true;
+  }
 
   const message = document.createElement("p");
   message.id = "battle-round-result-message";
   message.className = "battle-round-result-message";
-  message.textContent = getBattleMessage();
+  // 英語は「!」の直後で必ず改行。CSSのwhite-space設定に依存させない。
+  const resultMessage = japanese
+    ? getBattleMessage()
+    : getBattleMessage().replace(/!\s*/g, "!\n").trimEnd();
+  resultMessage.split("\n").forEach((line, index) => {
+    if (index > 0) message.append(document.createElement("br"));
+    message.append(document.createTextNode(line));
+  });
 
   const life = document.createElement("p");
   life.className = "battle-round-result-life";
@@ -869,8 +883,28 @@ function showBattleRoundResult() {
   closeButton.autofocus = true;
   const buttons = document.createElement("div");
   buttons.className = "battle-round-result-actions";
-  buttons.append(closeButton);
-  if (battle.phase === "resolved") {
+  if (battle.phase === "finished") {
+    const replayButton = createMenuButton(text.playAgain, () => {
+      if (gameState.battle !== battle) return;
+      const characterId = battle.player.characterId;
+      dialog.close();
+      battleUI.menuOpen = false;
+      battleUI.previewIndex = null;
+      startBattle(characterId);
+    }, true);
+    buttons.append(closeButton, replayButton, createMenuButton(
+      text.selectCharacter,
+      () => {
+        if (gameState.battle !== battle) return;
+        dialog.close();
+        battleUI.menuOpen = false;
+        battleUI.previewIndex = null;
+        gameState.battle = null;
+        changeScreen("character-select");
+      }
+    ));
+  } else {
+    buttons.append(closeButton);
     const nextButton = createMenuButton(text.nextTurn, () => {
       if (gameState.battle !== battle || battle.phase !== "resolved") return;
       dialog.close();
@@ -898,6 +932,7 @@ function advanceBattleFromResult() {
     ? ".battle-actions .menu-button"
     : ".battle-hand-card[role='button']";
   app.querySelector(selector)?.focus();
+  if (gameState.battle.phase === "finished") showBattleRoundResult();
 }
 
 
@@ -966,44 +1001,12 @@ function createBattleActions() {
   }
 
   // 盤面確認後は、結果ポップアップへ戻る。
-  if (battle.phase === "resolved" ||
-      (battle.phase === "finished" && battle.lastResult && battle.endReason !== "deck")) {
+  if (battle.phase === "resolved" || battle.phase === "finished") {
     actions.append(createMenuButton(
       gameState.language === "ja" ? "バトル結果へ" : "View Round Result",
       () => showBattleRoundResult(),
       true
     ));
-  }
-
-  // 対戦終了後
-  if (battle.phase === "finished") {
-    actions.append(
-      createMenuButton(
-        text.playAgain,
-        () => {
-          const characterId =
-            gameState.battle.player.characterId;
-
-          battleUI.menuOpen = false;
-          battleUI.previewIndex = null;
-
-          startBattle(characterId);
-        },
-        true
-      ),
-
-      createMenuButton(
-        text.selectCharacter,
-        () => {
-          battleUI.menuOpen = false;
-          battleUI.previewIndex = null;
-
-          gameState.battle = null;
-
-          changeScreen("character-select");
-        }
-      )
-    );
   }
 
   return actions;
