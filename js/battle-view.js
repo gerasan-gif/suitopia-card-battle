@@ -71,7 +71,7 @@ const BATTLE_TEXT = {
     faceDown: "A card set face down",
     bothSet: "Both cards have been set",
     reveal: "Reveal Cards",
-    cardsRevealed: "Cards have been revealed.",
+    cardsRevealed: "Cards have been revealed",
     gameFinished: "The game has ended.",
     bothAttack: "Both used Attack!\nEach takes 1 damage",
     noDamage: "Matching types. No damage",
