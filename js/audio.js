@@ -1,108 +1,141 @@
-// BGMの設定
+// BGM・SEを同じWeb Audio環境で管理する。
 const audioState = {
   enabled: true,
-  battleActive: false
+  battleActive: false,
+  pageHidden: document.visibilityState === "hidden"
 };
-
 const BGM_VOLUME = 0.3;
-
+const DAMAGE_SE_VOLUME = 0.7;
 let bgmContext = null;
 let bgmGain = null;
+let damageGain = null;
 let bgmSource = null;
+let damageSource = null;
 let bgmBufferPromise = null;
-
-// 読み込み中に画面を離れた場合の再生防止
+let damageBufferPromise = null;
 let bgmRequestId = 0;
+let damageRequestId = 0;
 
-
-// 音声の再生環境を作る
-function prepareBgmAudio() {
-  if (bgmContext) {
-    return;
+// iPhoneでは消音モードに従うゲーム用音声として扱う。
+// 消音スイッチ自体の状態は取得せず、OSの音声制御に従う。
+function configureGameAudioSession() {
+  try {
+    if (navigator.audioSession) navigator.audioSession.type = "ambient";
+  } catch (error) {
+    console.warn("音声セッションを設定できませんでした。", error);
   }
+}
+configureGameAudioSession();
 
-  bgmContext = new AudioContext();
-
-  bgmGain = bgmContext.createGain();
-  bgmGain.connect(bgmContext.destination);
-
-  updateBattleBgm();
+function canPlayGameAudio() {
+  return audioState.enabled && audioState.battleActive &&
+    !audioState.pageHidden && document.visibilityState !== "hidden";
 }
 
+function prepareBgmAudio() {
+  if (bgmContext) return;
+  configureGameAudioSession();
+  bgmContext = new AudioContext();
+  bgmGain = bgmContext.createGain();
+  damageGain = bgmContext.createGain();
+  bgmGain.connect(bgmContext.destination);
+  damageGain.connect(bgmContext.destination);
+  // 読み込み・復帰が完了するまでは無音。
+  bgmGain.gain.value = 0;
+  damageGain.gain.value = 0;
+  bgmContext.addEventListener("statechange", () => {
+    if (!canPlayGameAudio() && bgmContext.state === "running") {
+      silenceGameAudio();
+    }
+  });
+  // 最初のダメージ音の待ち時間を減らす。
+  loadDamageSe().catch(() => {});
+}
 
-// WAVを読み込み、再生用データに変換する
+async function decodeGameAudio(path) {
+  const response = await fetch(path);
+  if (!response.ok) throw new Error(`音声読み込み失敗: ${response.status}`);
+  return bgmContext.decodeAudioData(await response.arrayBuffer());
+}
+
 function loadBattleBgm() {
   if (!bgmBufferPromise) {
-    bgmBufferPromise = fetch("audio/suitopia_battle.wav")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`BGM読み込み失敗: ${response.status}`);
-        }
-
-        return response.arrayBuffer();
-      })
-      .then((data) => bgmContext.decodeAudioData(data))
-      .catch((error) => {
-        // 次回、読み込みを再試行できるようにする
-        bgmBufferPromise = null;
-        throw error;
-      });
+    bgmBufferPromise = decodeGameAudio("audio/suitopia_battle.wav")
+      .catch(error => { bgmBufferPromise = null; throw error; });
   }
-
   return bgmBufferPromise;
 }
 
-
-// オン／オフを音量に反映する
-function updateBattleBgm() {
-  if (!bgmGain) {
-    return;
+function loadDamageSe() {
+  if (!damageBufferPromise) {
+    damageBufferPromise = decodeGameAudio("audio/damage_hit.wav")
+      .catch(error => { damageBufferPromise = null; throw error; });
   }
-
-  const audible =
-    audioState.enabled && audioState.battleActive;
-
-  bgmGain.gain.setTargetAtTime(
-    audible ? BGM_VOLUME : 0,
-    bgmContext.currentTime,
-    0.02
-  );
+  return damageBufferPromise;
 }
 
+function stopDamageSe() {
+  damageRequestId++;
+  if (damageSource) {
+    damageSource.stop();
+    damageSource.disconnect();
+    damageSource = null;
+  }
+}
 
-// 新しい対戦で先頭から再生する
+// ロック時はフェードを待たずに消音。SEは破棄し、BGMの位置は保持。
+function silenceGameAudio() {
+  stopDamageSe();
+  if (!bgmContext) return;
+  for (const node of [bgmGain, damageGain]) {
+    node.gain.cancelScheduledValues(bgmContext.currentTime);
+    node.gain.setValueAtTime(0, bgmContext.currentTime);
+  }
+  if (bgmContext.state === "running") {
+    bgmContext.suspend().catch(error => console.warn("音声を中断できませんでした。", error));
+  }
+}
+
+function updateBattleBgm() {
+  if (!bgmContext) return;
+  if (!canPlayGameAudio()) {
+    silenceGameAudio();
+    return;
+  }
+  bgmGain.gain.cancelScheduledValues(bgmContext.currentTime);
+  bgmGain.gain.setTargetAtTime(BGM_VOLUME, bgmContext.currentTime, 0.02);
+  damageGain.gain.setValueAtTime(DAMAGE_SE_VOLUME, bgmContext.currentTime);
+}
+
+// Safariが自動復帰を許可しない場合は次のタップでも再試行する。
+async function resumeGameAudio() {
+  if (!bgmContext || !canPlayGameAudio()) return;
+  try {
+    configureGameAudioSession();
+    await bgmContext.resume();
+    // resume待ちの間に再ロックされた場合も消音する。
+    updateBattleBgm();
+  } catch (error) {
+    console.warn("音声の再開には画面のタップが必要な場合があります。", error);
+  }
+}
+
 async function playBattleBgm() {
   stopBattleBgm();
-
   audioState.battleActive = true;
-
   const requestId = bgmRequestId;
-
   try {
     prepareBgmAudio();
-
-    // ユーザーのクリックから直接、再生環境を有効にする
-    await bgmContext.resume();
-
+    await resumeGameAudio();
     const buffer = await loadBattleBgm();
-
-    // 読み込み中に対戦を離れた場合は再生しない
-    if (
-      requestId !== bgmRequestId ||
-      !audioState.battleActive
-    ) {
-      return;
-    }
-
+    if (requestId !== bgmRequestId || !audioState.battleActive) return;
     bgmSource = bgmContext.createBufferSource();
     bgmSource.buffer = buffer;
-
     bgmSource.loop = true;
     bgmSource.loopStart = 0;
     bgmSource.loopEnd = buffer.duration;
-
     bgmSource.connect(bgmGain);
-
+    // 非表示中に読み込みが完了しても、無音・中断状態を維持する。
     updateBattleBgm();
     bgmSource.start();
   } catch (error) {
@@ -110,72 +143,77 @@ async function playBattleBgm() {
   }
 }
 
-
-// 対戦画面を離れたら停止する
 function stopBattleBgm() {
   bgmRequestId++;
   audioState.battleActive = false;
-
   if (bgmSource) {
     bgmSource.stop();
     bgmSource.disconnect();
     bgmSource = null;
   }
-
-  updateBattleBgm();
+  silenceGameAudio();
 }
 
-// ゲームメニュー用のBGM切り替えボタン
+async function playDamageSe() {
+  stopDamageSe();
+  if (!canPlayGameAudio()) return;
+  const requestId = damageRequestId;
+  try {
+    prepareBgmAudio();
+    await resumeGameAudio();
+    const buffer = await loadDamageSe();
+    if (requestId !== damageRequestId || !canPlayGameAudio()) return;
+    const source = bgmContext.createBufferSource();
+    damageSource = source;
+    source.buffer = buffer;
+    source.connect(damageGain);
+    source.onended = () => {
+      source.disconnect();
+      if (damageSource === source) damageSource = null;
+    };
+    source.start();
+  } catch (error) {
+    console.warn("ダメージ音を再生できませんでした。", error);
+  }
+}
+
 function createBgmToggleButton() {
   const button = document.createElement("button");
-
   button.type = "button";
   button.className = "menu-button";
-
   function updateLabel() {
     const enabled = audioState.enabled;
-
-    if (gameState.language === "ja") {
-      button.textContent = enabled
-        ? "BGM：オン"
-        : "BGM：オフ";
-    } else {
-      button.textContent = enabled
-        ? "BGM: On"
-        : "BGM: Off";
-    }
-
+    button.textContent = gameState.language === "ja"
+      ? (enabled ? "音声：オン" : "音声：オフ")
+      : (enabled ? "Sound: On" : "Sound: Off");
     button.setAttribute("aria-pressed", String(enabled));
   }
-
   button.addEventListener("click", () => {
     audioState.enabled = !audioState.enabled;
-
     updateBattleBgm();
+    if (audioState.enabled) resumeGameAudio();
     updateLabel();
   });
-
   updateLabel();
-
   return button;
 }
 
-// ダメージ効果音
-const damageSe = new Audio("audio/damage_hit.wav");
-
-damageSe.preload = "auto";
-damageSe.volume = 0.7;
-
-
-// ダメージ音を先頭から再生する
-function playDamageSe() {
-  damageSe.currentTime = 0;
-
-  damageSe.play().catch((error) => {
-    if (error.name === "AbortError") {
-      return;
-    }
-
-    console.warn("ダメージ音を再生できませんでした。", error);
-  });
+// ロック・別アプリ・別タブへの移動に対応する。
+document.addEventListener("visibilitychange", () => {
+  audioState.pageHidden = document.visibilityState === "hidden";
+  if (audioState.pageHidden) silenceGameAudio();
+  else resumeGameAudio();
+});
+window.addEventListener("pagehide", () => {
+  audioState.pageHidden = true;
+  silenceGameAudio();
+});
+window.addEventListener("pageshow", () => {
+  audioState.pageHidden = document.visibilityState === "hidden";
+  resumeGameAudio();
+});
+for (const event of ["pointerdown", "keydown"]) {
+  document.addEventListener(event, () => {
+    if (bgmContext && bgmContext.state !== "running") resumeGameAudio();
+  }, { capture: true });
 }
