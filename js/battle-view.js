@@ -35,7 +35,7 @@ const BATTLE_TEXT = {
     playerRoundWin: "あなたの勝ち！ 相手に1ダメージ",
     cpuRoundWin: "相手の勝ち！ あなたに1ダメージ",
     nextTurn: "次のターンへ",
-    deckExhausted: "山札が0枚のため、ライフを比較します。",
+    deckExhausted: "山札0枚のため、ライフを比較します。",
     victory: "あなたの勝利です！",
     defeat: "あなたの敗北です",
     draw: "引き分けです",
