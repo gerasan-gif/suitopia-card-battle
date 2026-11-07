@@ -1989,3 +1989,12 @@ button:focus-visible {
   .tutorial-portrait { width: 44px; height: 44px; }
   .tutorial-guide { padding: 10px; gap: 10px; }
 }
+
+/* 1文ずつ折り返しを均等化し、末尾の1文字だけが残る行を抑える。 */
+.tutorial-sentence {
+  display: block;
+  text-wrap: balance;
+  word-break: normal;
+  overflow-wrap: normal;
+  line-break: strict;
+}

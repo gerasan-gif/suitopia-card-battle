@@ -79,14 +79,14 @@ function tutorialElement(tag, className, text) {
   return node;
 }
 
-// 文末ごとに実際の改行要素を入れる。画面幅による自然な折り返しも許容する。
+// 文ごとにブロック化し、句点での改行と文内の均等な折り返しを両立する。
 function setTutorialParagraphText(node, text) {
   const separator = gameState.language === "ja" ? /。[ \t]*/g : /\.[ \t]*/g;
   const lines = text.replace(separator, "$&\n").trimEnd().split("\n");
   node.replaceChildren();
-  lines.forEach((line, index) => {
-    if (index > 0) node.append(document.createElement("br"));
-    node.append(document.createTextNode(line.trim()));
+  lines.forEach(line => {
+    const sentence = tutorialElement("span", "tutorial-sentence", line.trim());
+    node.append(sentence);
   });
 }
 
