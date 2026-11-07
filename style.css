@@ -1990,11 +1990,15 @@ button:focus-visible {
   .tutorial-guide { padding: 10px; gap: 10px; }
 }
 
-/* 1文ずつ折り返しを均等化し、末尾の1文字だけが残る行を抑える。 */
+/* 文末の改行は維持し、日本語は指定した文節、英語は空白で折り返す。 */
 .tutorial-sentence {
   display: block;
-  text-wrap: balance;
+  text-wrap: wrap;
   word-break: normal;
   overflow-wrap: normal;
   line-break: strict;
+}
+.tutorial-phrase {
+  display: inline-block;
+  white-space: nowrap;
 }

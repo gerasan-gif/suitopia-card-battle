@@ -79,13 +79,51 @@ function tutorialElement(tag, className, text) {
   return node;
 }
 
-// 文ごとにブロック化し、句点での改行と文内の均等な折り返しを両立する。
+// 日本語の説明は、単語を分断しない文節を編集時に指定する。
+// 区切り記号は画面には出さず、その位置だけで自然に折り返す。
+const TUTORIAL_JA_PHRASES = [
+  "こんにちは！|風香です。",
+  "一緒に|カードバトルを|覚えましょう！",
+  "攻撃・防御・|フェイントの|3種類で|戦います。",
+  "ライフは|お互い5。",
+  "相手を|0にすれば|勝利です！",
+  "矢印の先の|カードに|勝ちます。",
+  "勝った側は|相手に|1ダメージ！",
+  "練習では|相手が|「攻撃」を|出します。",
+  "手札の|「防御」を|選んでみましょう！",
+  "攻撃を|止めるのは|青枠の|「防御」です。",
+  "もう一度|選んでみてね。",
+  "防御を|セットしました！|両者の|カードは|裏向きです。",
+  "公開して|確かめましょう。",
+  "カードを|公開しました。",
+  "防御が|攻撃に勝ち、|相手に|1ダメージ！",
+  "基本は|バッチリ！|本番では|相手のカードは|分かりません。",
+  "捨て札や|デッキ構成も|確認して|予想してみてね！",
+  "同じ攻撃なら|両者に|1ダメージ。",
+  "同じ防御・|フェイントなら|ダメージなし。",
+  "使用した|カードは|捨て札に|なります。"
+].reduce((phrases, marked) => {
+  phrases.set(marked.replace(/\|/g, ""), marked.split("|"));
+  return phrases;
+}, new Map());
+
 function setTutorialParagraphText(node, text) {
-  const separator = gameState.language === "ja" ? /。[ \t]*/g : /\.[ \t]*/g;
+  const japanese = gameState.language === "ja";
+  const separator = japanese ? /。[ \t]*/g : /\.[ \t]*/g;
   const lines = text.replace(separator, "$&\n").trimEnd().split("\n");
   node.replaceChildren();
   lines.forEach(line => {
-    const sentence = tutorialElement("span", "tutorial-sentence", line.trim());
+    const sentence = tutorialElement("span", "tutorial-sentence");
+    const content = line.trim();
+    if (japanese && TUTORIAL_JA_PHRASES.has(content)) {
+      TUTORIAL_JA_PHRASES.get(content).forEach((phrase, index) => {
+        if (index > 0) sentence.append(document.createElement("wbr"));
+        sentence.append(tutorialElement("span", "tutorial-phrase", phrase));
+      });
+    } else {
+      // 英語は通常の空白で区切り、単語内では折り返さない。
+      sentence.textContent = content;
+    }
     node.append(sentence);
   });
 }
