@@ -161,7 +161,10 @@ function createTutorialScreen() {
     [["player", "fuka_defence", tutorialState.playerLife],
       ["opponent", "shizuku_attack", tutorialState.cpuLife]].forEach(([side, id, life]) => {
       const slot = tutorialElement("div", "tutorial-slot");
-      slot.append(tutorialElement("p", "tutorial-life", `${t[side]} · ${t.life} ${life}`));
+      const lifeDisplay = tutorialElement("p", "tutorial-life");
+      lifeDisplay.append(tutorialElement("span", "tutorial-life-label", t[side]),
+        tutorialElement("span", "tutorial-life-value", `${t.life} ${life}`));
+      slot.append(lifeDisplay);
       slot.append(hidden
         ? createCardImage("tutorial-card-back", "images/02_card_reverse.webp", t.back)
         : createCard(CARDS.find(c => c.id === id), gameState.language));

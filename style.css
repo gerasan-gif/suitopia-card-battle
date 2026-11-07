@@ -1913,65 +1913,79 @@ button:focus-visible {
   }
 }
 
-/* 独立した操作チュートリアル。既存の対戦画面の配置には影響しない。 */
-.app-tutorial { min-height: 100svh; padding: 12px; }
-.tutorial-screen {
-  width: min(1080px, 100%); min-height: calc(100svh - 24px); margin: auto;
-  padding: clamp(12px, 2vw, 24px); border: 1px solid #dfbd77; border-radius: 18px;
-  background: linear-gradient(135deg, #202e49, #0d1529);
-  display: flex; flex-direction: column; gap: 14px;
+/* チュートリアルは表示可能な高さに合わせて、操作ボタンの領域を常に確保する。 */
+.app-tutorial {
+  padding: 8px max(8px, env(safe-area-inset-right)) 8px max(8px, env(safe-area-inset-left));
+  min-height: 100svh;
 }
-.tutorial-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-.tutorial-top h1 { font-size: clamp(20px, 3vw, 28px); margin-right: auto; }
-.tutorial-top > .menu-button { width: auto; min-height: 40px; padding: 8px 12px; font-size: 14px; }
-.tutorial-top .language-controls { margin: 0; gap: 6px; }
+.tutorial-screen {
+  width: min(1080px, 100%); height: calc(100svh - 16px); min-height: 0; margin: auto;
+  padding: 16px; border: 1px solid #dfbd77; border-radius: 18px;
+  background: linear-gradient(135deg, #202e49, #0d1529);
+  display: grid;
+  grid-template: "top" auto "guide" 140px "content" minmax(0, 1fr) "actions" 48px / minmax(0, 1fr);
+  gap: 12px;
+}
+.tutorial-top { grid-area: top; display: flex; align-items: center; gap: 10px; min-width: 0; }
+.tutorial-top h1 { font-size: clamp(20px, 3vw, 28px); margin-right: auto; white-space: nowrap; }
+.tutorial-top > .menu-button { width: auto; min-height: 40px; padding: 8px 12px; font-size: 14px; white-space: nowrap; }
+.tutorial-top .language-controls { margin: 0; gap: 6px; flex-wrap: nowrap; }
 .tutorial-top .language-button { padding: 7px 12px; min-height: 40px; font-size: 14px; }
-.tutorial-progress { font-size: 14px; }
-.tutorial-guide { display: flex; align-items: center; gap: 16px; padding: 10px 16px; background: #0b1229d9; border-radius: 12px; }
-.tutorial-portrait { width: clamp(48px, 8vw, 84px); height: clamp(48px, 8vw, 84px); object-fit: cover; object-position: top; border-radius: 50%; border: 2px solid #dfbd77; flex-shrink: 0; }
-.tutorial-speech { font-size: clamp(15px, 2vw, 20px); line-height: 1.6; }
+.tutorial-progress { font-size: 14px; white-space: nowrap; }
+.tutorial-guide { grid-area: guide; min-width: 0; min-height: 0; display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: #0b1229d9; border-radius: 12px; }
+.tutorial-portrait { width: 64px; height: 64px; object-fit: cover; object-position: top; border-radius: 50%; border: 2px solid #dfbd77; flex-shrink: 0; }
+.tutorial-speech { min-width: 0; max-height: 100%; overflow: auto; font-size: clamp(15px, 2vw, 20px); line-height: 1.5; }
 .tutorial-speech strong { color: #edcb86; font-size: .85em; }
-.tutorial-speech p { margin: 2px 0; }
-.tutorial-content { flex: 1; display: grid; align-content: center; }
-.tutorial-goal, .tutorial-extra { margin: auto; max-width: 760px; font-size: clamp(18px, 2.8vw, 26px); line-height: 1.8; }
-.tutorial-relations { display: grid; gap: 14px; padding: 0; list-style: none; margin: 0 auto; width: min(760px, 100%); }
-.tutorial-relations li { padding: 14px; border: 1px solid #dfbd77; border-radius: 10px; font-size: clamp(17px, 2.5vw, 24px); }
-.tutorial-relations li::before { content: "→ "; }
+.tutorial-speech p { margin: 4px 0 0; }
+.tutorial-content { grid-area: content; min-height: 0; min-width: 0; container-type: size; display: grid; align-items: center; }
+.tutorial-goal, .tutorial-extra { margin: auto; max-width: 760px; max-height: 100%; overflow: auto; font-size: clamp(17px, 2.5vw, 24px); line-height: 1.65; }
+.tutorial-relations { display: grid; gap: 10px; padding: 0; list-style: none; margin: auto; width: min(760px, 100%); max-height: 100%; overflow: auto; }
+.tutorial-relations li { padding: 10px 14px; border: 1px solid #dfbd77; border-radius: 10px; font-size: clamp(17px, 2.5vw, 24px); }
+.tutorial-relations small { display: block; font-size: .66em; margin-top: 3px; opacity: .95; }
+.tutorial-arrow { color: #ffe1a0; font-weight: bold; }
 .tutorial-type-attack { background: #8b1736; color: #fff4d6; }
 .tutorial-type-defence { background: #1a428d; color: #fff4d6; }
 .tutorial-type-feint { background: #602a95; color: #fff4d6; }
-.tutorial-hand, .tutorial-field { display: flex; justify-content: center; align-items: start; gap: clamp(12px, 3vw, 36px); }
-.tutorial-card-choice { border: 1px solid #c7a566; border-radius: 10px; padding: 6px; background: #0b1229; width: min(25%, 200px); color: inherit; }
+.tutorial-hand { height: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; }
+.tutorial-card-choice { border: 1px solid #c7a566; border-radius: 10px; padding: 4px; background: #0b1229; width: min(29%, 180px, calc((100cqh - 44px) * .75)); color: inherit; }
 .tutorial-card-choice .card { width: 100%; pointer-events: none; }
-.tutorial-card-choice > span { display: block; padding: 6px 2px; border-radius: 5px; font-weight: bold; font-size: clamp(13px, 2vw, 18px); }
+.tutorial-card-choice > span { display: block; padding: 5px 2px; border-radius: 5px; font-weight: bold; font-size: 14px; }
 .tutorial-card-choice:hover { outline: 2px solid #dfbd77; }
-.tutorial-slot { width: min(30%, 170px); text-align: center; }
-.tutorial-slot .card, .tutorial-card-back { width: 100%; aspect-ratio: 3/4; object-fit: fill; }
-.tutorial-life { margin: 0 0 8px; font-size: clamp(14px, 2vw, 19px); }
-.tutorial-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
-.tutorial-actions .menu-button { width: min(300px, 100%); }
-.tutorial-wait { margin: 10px; text-align: center; }
-.tutorial-result { width: min(680px, calc(100vw - 32px)); max-height: calc(100svh - 24px); overflow: auto; color: #fff4d6; background: linear-gradient(135deg, #243b68, #101c35); border: 2px solid #dfbd77; border-radius: 18px; padding: 24px; text-align: center; }
-.tutorial-result::backdrop { background: #050916aa; }
-.tutorial-result h2 { margin: 0 0 12px; }
-.tutorial-win { font-size: clamp(22px, 3vw, 30px); font-weight: bold; }
-@media (max-height: 520px) and (orientation: landscape) {
-  .app-tutorial { padding: 6px; }
-  .tutorial-screen { min-height: calc(100svh - 12px); padding: 10px 14px; gap: 8px; }
-  .tutorial-guide { padding: 6px 12px; gap: 12px; }
-  .tutorial-portrait { width: 44px; height: 44px; }
-  .tutorial-speech { font-size: 14px; line-height: 1.4; }
+.tutorial-field { width: 100%; height: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 190px)); justify-content: center; gap: clamp(12px, 3vw, 36px); }
+.tutorial-slot { min-width: 0; min-height: 0; height: 100%; display: grid; grid-template-rows: 48px minmax(0, 1fr); justify-items: center; align-items: start; text-align: center; }
+.tutorial-life { margin: 0; height: 44px; display: grid; grid-template-rows: 20px 24px; font-size: 16px; line-height: 20px; }
+.tutorial-life-label, .tutorial-life-value { display: block; white-space: nowrap; }
+.tutorial-life-value { font-weight: bold; line-height: 24px; }
+.tutorial-slot .card, .tutorial-slot .tutorial-card-back { width: min(100%, 170px, calc((100cqh - 52px) * .75)); height: auto; aspect-ratio: 3/4; object-fit: fill; display: block; }
+.tutorial-screen > .tutorial-actions { grid-area: actions; align-items: stretch; }
+.tutorial-actions { display: flex; justify-content: center; gap: 12px; min-width: 0; min-height: 0; }
+.tutorial-actions .menu-button { width: min(300px, 48%); min-height: 40px; padding: 6px 12px; font-size: 16px; }
+.tutorial-wait { margin: auto; font-size: 14px; text-align: center; }
+/* 横向きの低い画面は、説明を左・カードを右に配置して高さを活用する。 */
+@media (max-height: 600px) and (orientation: landscape) {
+  .tutorial-screen {
+    padding: 10px 12px; gap: 8px;
+    grid-template: "top top" 38px "guide content" minmax(0, 1fr) "actions actions" 42px / minmax(0, 34fr) minmax(0, 66fr);
+  }
+  .tutorial-top { gap: 8px; }
   .tutorial-top h1 { font-size: 20px; }
-  .tutorial-hand .tutorial-card-choice { width: min(23%, 110px); }
-  .tutorial-slot { width: 88px; }
-  .tutorial-relations { gap: 6px; }
-  .tutorial-relations li { padding: 7px 12px; font-size: 16px; }
-  .tutorial-actions .menu-button { min-height: 38px; padding: 8px 14px; font-size: 15px; }
-  .tutorial-card-choice > span { padding: 3px; font-size: 12px; }
-  .tutorial-life { font-size: 13px; margin-bottom: 4px; }
+  .tutorial-progress { font-size: 12px; }
+  .tutorial-top > .menu-button, .tutorial-top .language-button { font-size: 13px; min-height: 36px; padding: 6px 10px; }
+  .tutorial-guide { flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px; overflow: auto; }
+  .tutorial-portrait { width: 40px; height: 40px; }
+  .tutorial-speech { font-size: 14px; line-height: 1.4; overflow: visible; max-height: none; }
+  .tutorial-goal, .tutorial-extra { font-size: 16px; line-height: 1.5; }
+  .tutorial-relations { gap: 5px; }
+  .tutorial-relations li { padding: 5px 10px; font-size: 16px; }
+  .tutorial-relations small { font-size: 12px; margin-top: 0; }
+  .tutorial-actions .menu-button { font-size: 15px; }
+  .tutorial-card-choice > span { font-size: 12px; }
+  .tutorial-life { font-size: 14px; }
 }
-.tutorial-relations small { display: block; font-size: .66em; margin-top: 3px; opacity: .95; }
-.tutorial-arrow { color: #ffe1a0; font-weight: bold; }
-@media (max-height: 520px) and (orientation: landscape) {
-  .tutorial-relations small { display: inline; margin-left: 16px; font-size: 12px; }
+@media (max-width: 600px) and (orientation: portrait) {
+  .tutorial-top { flex-wrap: wrap; }
+  .tutorial-top h1 { width: 100%; }
+  .tutorial-screen { padding: 10px; gap: 8px; grid-template-rows: auto 160px minmax(0, 1fr) 48px; }
+  .tutorial-portrait { width: 44px; height: 44px; }
+  .tutorial-guide { padding: 10px; gap: 10px; }
 }
