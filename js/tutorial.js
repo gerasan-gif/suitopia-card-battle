@@ -79,6 +79,23 @@ function tutorialElement(tag, className, text) {
   return node;
 }
 
+// 文末ごとに実際の改行要素を入れる。画面幅による自然な折り返しも許容する。
+function setTutorialParagraphText(node, text) {
+  const separator = gameState.language === "ja" ? /。[ \t]*/g : /\.[ \t]*/g;
+  const lines = text.replace(separator, "$&\n").trimEnd().split("\n");
+  node.replaceChildren();
+  lines.forEach((line, index) => {
+    if (index > 0) node.append(document.createElement("br"));
+    node.append(document.createTextNode(line.trim()));
+  });
+}
+
+function tutorialParagraph(className, text) {
+  const paragraph = tutorialElement("p", className);
+  setTutorialParagraphText(paragraph, text);
+  return paragraph;
+}
+
 function createTutorialScreen() {
   const t = TUTORIAL_TEXT[gameState.language];
   const step = tutorialState.step;
@@ -93,14 +110,14 @@ function createTutorialScreen() {
   guide.append(createCardImage("tutorial-portrait", "images/10_fuka_select.webp", t.guide));
   const speech = tutorialElement("div", "tutorial-speech");
   speech.append(tutorialElement("strong", "", t.guide));
-  const message = tutorialElement("p", "", t[["board", "result"].includes(step) ? "revealed" : step]);
+  const message = tutorialParagraph("", t[["board", "result"].includes(step) ? "revealed" : step]);
   speech.append(message);
   guide.append(speech);
   const content = tutorialElement("div", "tutorial-content");
   const actions = tutorialElement("div", "tutorial-actions");
 
   if (step === "intro") {
-    content.append(tutorialElement("p", "tutorial-goal", t.goal));
+    content.append(tutorialParagraph("tutorial-goal", t.goal));
     actions.append(createMenuButton(t.next, () => advanceTutorial("relations"), true));
   } else if (step === "relations") {
     const list = tutorialElement("ul", "tutorial-relations");
@@ -127,7 +144,7 @@ function createTutorialScreen() {
       button.addEventListener("click", () => {
         if (type === "defence") advanceTutorial("set");
         else {
-          message.textContent = t.hint;
+          setTutorialParagraphText(message, t.hint);
           message.setAttribute("role", "status");
         }
       });
@@ -135,7 +152,7 @@ function createTutorialScreen() {
     });
     content.append(hand);
   } else if (step === "done") {
-    content.append(tutorialElement("p", "tutorial-extra", t.extra));
+    content.append(tutorialParagraph("tutorial-extra", t.extra));
     actions.append(createMenuButton(t.play, () => changeScreen("character-select"), true),
       createMenuButton(t.again, startTutorial));
   } else {
