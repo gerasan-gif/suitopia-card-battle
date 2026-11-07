@@ -13,6 +13,7 @@ const SCREEN_TEXT = {
     openMenu: "メニューへ",
     menu: "メインメニュー",
     start: "ゲームスタート",
+    tutorial: "チュートリアル",
     rules: "ルール説明",
     cards: "カード一覧",
     backMenu: "メニューへ戻る",
@@ -56,6 +57,7 @@ const SCREEN_TEXT = {
     openMenu: "Open Menu",
     menu: "Main Menu",
     start: "Game Start",
+    tutorial: "Tutorial",
     rules: "How to Play",
     cards: "Card Gallery",
     backMenu: "Back to Menu",
@@ -178,6 +180,7 @@ function preloadBattleImages() {
 
 // 画面を切り替える
 function changeScreen(screen) {
+  if (screen !== "tutorial") stopTutorial();
   if (screen !== "battle") {
     stopBattleBgm();
   }
@@ -306,6 +309,7 @@ function createMainMenuScreen(text) {
       () => changeScreen("character-select"),
       true
     ),
+    createMenuButton(text.tutorial, startTutorial),
     createMenuButton(
       text.rules,
       () => changeScreen("rules")
@@ -421,6 +425,11 @@ function renderScreen() {
     case "menu":
       app.className = "app-menu";
       screen = createMainMenuScreen(text);
+      break;
+
+    case "tutorial":
+      app.className = "app-tutorial";
+      screen = createTutorialScreen();
       break;
 
     case "gallery":

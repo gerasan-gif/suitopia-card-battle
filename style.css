@@ -1912,3 +1912,66 @@ button:focus-visible {
     font-size: 14px;
   }
 }
+
+/* 独立した操作チュートリアル。既存の対戦画面の配置には影響しない。 */
+.app-tutorial { min-height: 100svh; padding: 12px; }
+.tutorial-screen {
+  width: min(1080px, 100%); min-height: calc(100svh - 24px); margin: auto;
+  padding: clamp(12px, 2vw, 24px); border: 1px solid #dfbd77; border-radius: 18px;
+  background: linear-gradient(135deg, #202e49, #0d1529);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.tutorial-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.tutorial-top h1 { font-size: clamp(20px, 3vw, 28px); margin-right: auto; }
+.tutorial-top > .menu-button { width: auto; min-height: 40px; padding: 8px 12px; font-size: 14px; }
+.tutorial-top .language-controls { margin: 0; gap: 6px; }
+.tutorial-top .language-button { padding: 7px 12px; min-height: 40px; font-size: 14px; }
+.tutorial-progress { font-size: 14px; }
+.tutorial-guide { display: flex; align-items: center; gap: 16px; padding: 10px 16px; background: #0b1229d9; border-radius: 12px; }
+.tutorial-portrait { width: clamp(48px, 8vw, 84px); height: clamp(48px, 8vw, 84px); object-fit: cover; object-position: top; border-radius: 50%; border: 2px solid #dfbd77; flex-shrink: 0; }
+.tutorial-speech { font-size: clamp(15px, 2vw, 20px); line-height: 1.6; }
+.tutorial-speech strong { color: #edcb86; font-size: .85em; }
+.tutorial-speech p { margin: 2px 0; }
+.tutorial-content { flex: 1; display: grid; align-content: center; }
+.tutorial-goal, .tutorial-extra { margin: auto; max-width: 760px; font-size: clamp(18px, 2.8vw, 26px); line-height: 1.8; }
+.tutorial-relations { display: grid; gap: 14px; padding: 0; list-style: none; margin: 0 auto; width: min(760px, 100%); }
+.tutorial-relations li { padding: 14px; border: 1px solid #dfbd77; border-radius: 10px; font-size: clamp(17px, 2.5vw, 24px); }
+.tutorial-relations li::before { content: "→ "; }
+.tutorial-type-attack { background: #8b1736; color: #fff4d6; }
+.tutorial-type-defence { background: #1a428d; color: #fff4d6; }
+.tutorial-type-feint { background: #602a95; color: #fff4d6; }
+.tutorial-hand, .tutorial-field { display: flex; justify-content: center; align-items: start; gap: clamp(12px, 3vw, 36px); }
+.tutorial-card-choice { border: 1px solid #c7a566; border-radius: 10px; padding: 6px; background: #0b1229; width: min(25%, 200px); color: inherit; }
+.tutorial-card-choice .card { width: 100%; pointer-events: none; }
+.tutorial-card-choice > span { display: block; padding: 6px 2px; border-radius: 5px; font-weight: bold; font-size: clamp(13px, 2vw, 18px); }
+.tutorial-card-choice:hover { outline: 2px solid #dfbd77; }
+.tutorial-slot { width: min(30%, 170px); text-align: center; }
+.tutorial-slot .card, .tutorial-card-back { width: 100%; aspect-ratio: 3/4; object-fit: fill; }
+.tutorial-life { margin: 0 0 8px; font-size: clamp(14px, 2vw, 19px); }
+.tutorial-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+.tutorial-actions .menu-button { width: min(300px, 100%); }
+.tutorial-wait { margin: 10px; text-align: center; }
+.tutorial-result { width: min(680px, calc(100vw - 32px)); max-height: calc(100svh - 24px); overflow: auto; color: #fff4d6; background: linear-gradient(135deg, #243b68, #101c35); border: 2px solid #dfbd77; border-radius: 18px; padding: 24px; text-align: center; }
+.tutorial-result::backdrop { background: #050916aa; }
+.tutorial-result h2 { margin: 0 0 12px; }
+.tutorial-win { font-size: clamp(22px, 3vw, 30px); font-weight: bold; }
+@media (max-height: 520px) and (orientation: landscape) {
+  .app-tutorial { padding: 6px; }
+  .tutorial-screen { min-height: calc(100svh - 12px); padding: 10px 14px; gap: 8px; }
+  .tutorial-guide { padding: 6px 12px; gap: 12px; }
+  .tutorial-portrait { width: 44px; height: 44px; }
+  .tutorial-speech { font-size: 14px; line-height: 1.4; }
+  .tutorial-top h1 { font-size: 20px; }
+  .tutorial-hand .tutorial-card-choice { width: min(23%, 110px); }
+  .tutorial-slot { width: 88px; }
+  .tutorial-relations { gap: 6px; }
+  .tutorial-relations li { padding: 7px 12px; font-size: 16px; }
+  .tutorial-actions .menu-button { min-height: 38px; padding: 8px 14px; font-size: 15px; }
+  .tutorial-card-choice > span { padding: 3px; font-size: 12px; }
+  .tutorial-life { font-size: 13px; margin-bottom: 4px; }
+}
+.tutorial-relations small { display: block; font-size: .66em; margin-top: 3px; opacity: .95; }
+.tutorial-arrow { color: #ffe1a0; font-weight: bold; }
+@media (max-height: 520px) and (orientation: landscape) {
+  .tutorial-relations small { display: inline; margin-left: 16px; font-size: 12px; }
+}
