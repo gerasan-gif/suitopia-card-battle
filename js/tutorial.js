@@ -42,7 +42,7 @@ const TUTORIAL_TEXT = {
 function stopTutorial() {
   clearTimeout(tutorialState.timer);
   tutorialState.timer = null;
-  app.querySelector(".tutorial-result")?.close();
+  app.querySelector(".tutorial-round-result")?.close();
 }
 
 function startTutorial() {
@@ -156,17 +156,42 @@ function createTutorialScreen() {
     else actions.append(createMenuButton(t.resultButton, () => advanceTutorial("result"), true));
 
     if (step === "result") {
-      const dialog = tutorialElement("dialog", "tutorial-result");
+      // 本編と同じCSS・結果文言を使い、練習の進行だけを独立させる。
+      const language = gameState.language;
+      const japanese = language === "ja";
+      const battleText = BATTLE_TEXT[language];
+      const dialog = tutorialElement("dialog", "battle-round-result-dialog tutorial-round-result");
+      dialog.lang = language;
       dialog.setAttribute("aria-labelledby", "tutorial-result-title");
+      dialog.setAttribute("aria-describedby", "tutorial-result-message");
+      const panel = tutorialElement("section", "battle-round-result-panel");
+      panel.dataset.outcome = "win";
       const heading = tutorialElement("h2", "", t.result);
       heading.id = "tutorial-result-title";
-      const buttons = tutorialElement("div", "tutorial-actions");
-      buttons.append(createMenuButton(t.view, () => advanceTutorial("board")),
-        createMenuButton(t.next, () => advanceTutorial("done"), true));
-      dialog.append(heading, tutorialElement("p", "tutorial-win", t.win),
-        tutorialElement("p", "", t.damage),
-        tutorialElement("p", "", `${t.life} — ${t.player}: ${tutorialState.playerLife} / ${t.opponent}: ${tutorialState.cpuLife}`),
-        buttons);
+      const playerType = CARD_TYPES.defence.lang[language].label;
+      const cpuType = CARD_TYPES.attack.lang[language].label;
+      const matchup = tutorialElement("p", "battle-round-result-matchup", japanese
+        ? `あなた：${playerType} ／ 相手：${cpuType}`
+        : `You: ${playerType} / Opponent: ${cpuType}`);
+      const message = tutorialElement("p", "battle-round-result-message");
+      message.id = "tutorial-result-message";
+      const resultMessage = japanese
+        ? battleText.playerRoundWin
+        : battleText.playerRoundWin.replace(/!\s*/g, "!\n").trimEnd();
+      resultMessage.split("\n").forEach((line, index) => {
+        if (index > 0) message.append(document.createElement("br"));
+        message.append(document.createTextNode(line));
+      });
+      const life = tutorialElement("p", "battle-round-result-life", japanese
+        ? `残りライフ　あなた：${tutorialState.playerLife} ／ 相手：${tutorialState.cpuLife}`
+        : `Life remaining — You: ${tutorialState.playerLife} / Opponent: ${tutorialState.cpuLife}`);
+      const buttons = tutorialElement("div", "battle-round-result-actions");
+      const viewButton = createMenuButton(t.view, () => advanceTutorial("board"));
+      viewButton.autofocus = true;
+      buttons.append(viewButton,
+        createMenuButton(battleText.nextTurn, () => advanceTutorial("done"), true));
+      panel.append(heading, matchup, message, life, buttons);
+      dialog.append(panel);
       dialog.addEventListener("cancel", e => { e.preventDefault(); advanceTutorial("board"); });
       screen.append(dialog);
       requestAnimationFrame(() => {
