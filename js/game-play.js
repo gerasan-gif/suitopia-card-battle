@@ -258,12 +258,34 @@ function createCharacterSelectScreen() {
   return screen;
 }
 
-// CPUの手札から、ランダムな位置を選ぶ
-function chooseCpuCardIndex(hand) {
+// 45%でキャラクターの得意札を優先し、残り55%は手札全体から選ぶ。
+// 例：3種類各1枚なら、得意札の最終的な使用率は 45% + 55% / 3 ≒ 63%。
+// プレイヤーの手札・セット札・未公開情報は参照しない。
+const CPU_PRIORITY_CHANCE = 0.45;
+const CPU_PREFERRED_TYPES = Object.freeze({
+  anna: "defence",
+  shizuku: "attack",
+  chihiro: "feint"
+});
+
+function chooseCpuCardIndex(hand, characterId) {
   if (hand.length === 0) {
     return -1;
   }
 
+  const preferredType = CPU_PREFERRED_TYPES[characterId];
+  const preferredIndices = [];
+  if (preferredType) {
+    hand.forEach((card, index) => {
+      if (card.type === preferredType) preferredIndices.push(index);
+    });
+  }
+
+  if (preferredIndices.length > 0 && Math.random() < CPU_PRIORITY_CHANCE) {
+    return preferredIndices[Math.floor(Math.random() * preferredIndices.length)];
+  }
+
+  // 風香・得意札なし・優先しない場合は、各手札を等確率で選択。
   return Math.floor(Math.random() * hand.length);
 }
 
@@ -296,7 +318,7 @@ function setPlayerCard(handIndex) {
   }
 
   // プレイヤーのカード内容を渡さずに選択する
-  const cpuIndex = chooseCpuCardIndex(cpu.hand);
+  const cpuIndex = chooseCpuCardIndex(cpu.hand, cpu.characterId);
 
   if (cpuIndex === -1) {
     return false;
